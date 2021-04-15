@@ -7,6 +7,7 @@ gui = Gui()
 
 # gui.start_gui()
 board.place_new_piece()
+board.print_board()
 
 while True:
     player_input = input("(asd): ")
@@ -17,5 +18,4 @@ while True:
     if player_input == "d":
         board.try_move_right()
 
-# t = threading.Timer(1.0, board.tick)
-# t.start()
+    board.tick()
