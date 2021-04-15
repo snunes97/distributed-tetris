@@ -31,8 +31,12 @@ class Board():
 
         self.PIECE_I = [[0,0],[1,0],[2,0],[3,0]]
         self.PIECE_O = [[0,0],[0,1],[1,0],[1,1]]
+        self.PIECE_T = [[0,1],[1,0],[1,1],[1,2]]
+        self.PIECE_Z = [[0,1],[0,2],[1,0],[1,1]]
+        self.PIECE_L = [[0,0],[0,1],[1,1],[1,2]]
 
-        self.pieces = [self.PIECE_I, self.PIECE_O]
+
+        self.pieces = [self.PIECE_I, self.PIECE_O, self.PIECE_T, self.PIECE_Z, self.PIECE_L]
 
         self.active_piece = None
 
