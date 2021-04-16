@@ -66,33 +66,25 @@ class Board():
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_right()
 
-    #Move down Test
-    def try_move_down(self):
-        for pos in self.active_piece.shape_positions:
-            if pos[0] >=19: #Para evitar o erro de sair do Tabuleiro
-                #Falta testar se não tem objeto em baixo
-                return False
-        self.draw_shape(0, self.active_piece)
-        self.active_piece.move_down()
-    #Move down End
-
     def draw_shape(self, mode, shape):
-
+        #0-Casa Vazia
+        #1-Peca Ativa
+        #2-Peca Colocada
         shape_pos = shape.shape_positions
-
-        if mode == 1:
-            for position in shape_pos:
-                self.board[position[0]][position[1]] = mode
-
-        if mode == 0:
-            for position in shape_pos:
-                self.board[position[0]][position[1]] = mode
+        for position in shape_pos:
+            self.board[position[0]][position[1]] = mode
 
     def place_new_piece(self):
         #pick random piece from piece list
         new_piece = Piece(copy.deepcopy(random.choice(self.pieces)))
         self.active_piece = new_piece
         self.draw_shape(1, self.active_piece)
+
+    def check_line(self):
+        for line in self.board:
+            if 0 not in line:
+                self.board.remove(line)
+                self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def tick(self):
         self.draw_shape(0, self.active_piece)
@@ -101,8 +93,17 @@ class Board():
 
         for pos in self.active_piece.shape_positions:
             if pos[0] >= 20:
+                self.draw_shape(2, self.active_piece)
+                self.check_line()
                 self.place_new_piece()
                 break
+
+        #Confirma se não tem peça por baixo
+        if self.active_piece.check_bellow(self.board):
+            self.draw_shape(2, self.active_piece)
+            self.check_line()
+            self.place_new_piece()
+
 
         print("/////////////////////////////////////////////////////////")
         self.print_board()
