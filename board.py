@@ -8,6 +8,7 @@ from piece import Piece
 class Board():
     def __init__(self):
 
+        #Defines the board
         self.board = [[0,0,0,0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0,0,0,0],
@@ -29,6 +30,8 @@ class Board():
                      [0,0,0,0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0,0,0,0]]
+
+        #Defines the pieces
 
         self.PIECE_I = [[0,0],[1,0],[2,0],[3,0]]
         self.PIECE_O = [[0,0],[0,1],[1,0],[1,1]]
@@ -62,6 +65,16 @@ class Board():
 
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_right()
+
+    #Move down Test
+    def try_move_down(self):
+        for pos in self.active_piece.shape_positions:
+            if pos[0] >=19: #Para evitar o erro de sair do Tabuleiro
+                #Falta testar se não tem objeto em baixo
+                return False
+        self.draw_shape(0, self.active_piece)
+        self.active_piece.move_down()
+    #Move down End
 
     def draw_shape(self, mode, shape):
 
