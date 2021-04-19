@@ -19,8 +19,6 @@ while True:
         board.try_move_right()
 
     # Future features
-    if player_input == "s":
-        board.try_move_down()
     #
     # if player_input == "q":
     #     board.try_rotate_left()

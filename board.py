@@ -32,7 +32,7 @@ class Board():
                      [0,0,0,0,0,0,0,0,0,0,0]]
 
         #Defines the pieces
-
+            #6 Pieces
         self.PIECE_I = [[0,0],[1,0],[2,0],[3,0]]
         self.PIECE_O = [[0,0],[0,1],[1,0],[1,1]]
         self.PIECE_T = [[0,1],[1,0],[1,1],[1,2]]
@@ -41,7 +41,12 @@ class Board():
 
         self.pieces = [self.PIECE_I, self.PIECE_O, self.PIECE_T, self.PIECE_Z, self.PIECE_L]
 
+            #7 Colors
+        self.shape_colors = [(0, 255, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+
         self.active_piece = None
+
+
 
     def print_board(self):
         # print for testing
@@ -90,6 +95,8 @@ class Board():
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_down()
         self.draw_shape(1, self.active_piece)
+        #Código para mover automáticamente para baixo
+        #threading.Timer(1.0, self.tick).start()
 
         for pos in self.active_piece.shape_positions:
             if pos[0] >= 20:
