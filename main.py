@@ -1,13 +1,24 @@
 import threading
 from gui import Gui
 from board import Board
+from timer import Timer
 
-board = Board()
 gui = Gui()
+board = Board(gui)
 
-# gui.start_gui()
+gui.start_gui()
 board.place_new_piece()
 board.print_board()
+
+# # Código para mover automáticamente para baixo
+# threading.Timer(1.0, board.tick).start()
+
+stopFlag = threading.Event()
+thread = Timer(stopFlag, board)
+thread.start()
+
+# this will stop the timer
+# stopFlag.set()
 
 while True:
     player_input = input("(asd): ")

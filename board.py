@@ -1,12 +1,11 @@
-import threading
 import random
 import copy
-import time
-
 from piece import Piece
 
 class Board():
-    def __init__(self):
+    def __init__(self, gui):
+
+        self.gui = gui
 
         #Defines the board
         self.board = [[0,0,0,0,0,0,0,0,0,0,0],
@@ -45,7 +44,7 @@ class Board():
         self.shape_colors = [(0, 255, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
 
         self.active_piece = None
-
+        self.timer_on = False
 
 
     def print_board(self):
@@ -95,8 +94,6 @@ class Board():
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_down()
         self.draw_shape(1, self.active_piece)
-        #Código para mover automáticamente para baixo
-        #threading.Timer(1.0, self.tick).start()
 
         for pos in self.active_piece.shape_positions:
             if pos[0] >= 20:
@@ -111,6 +108,6 @@ class Board():
             self.check_line()
             self.place_new_piece()
 
-
+        self.gui.update_gui(self.board)
         print("/////////////////////////////////////////////////////////")
         self.print_board()
