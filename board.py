@@ -3,9 +3,7 @@ import copy
 from piece import Piece
 
 class Board():
-    def __init__(self, gui):
-
-        self.gui = gui
+    def __init__(self):
 
         #Defines the board
         self.board = [[0,0,0,0,0,0,0,0,0,0,0],
@@ -108,6 +106,5 @@ class Board():
             self.check_line()
             self.place_new_piece()
 
-        self.gui.update_gui(self.board)
         print("/////////////////////////////////////////////////////////")
         self.print_board()

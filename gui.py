@@ -1,10 +1,14 @@
+from threading import Thread
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import ttk as ttk
 
+class Gui(Thread):
+    def __init__(self, event, board):
+        Thread.__init__(self)
+        self.stopped = event
+        self.board = board
 
-class Gui:
-    def __init__(self):
         self.BOARDX = 13
         self.BOARDY = 23
 
@@ -33,16 +37,21 @@ class Gui:
                     vLabel = tk.Label(self.master, image=self.voidImg, pady="0", padx="0", bd=1)
                     vLabel.grid(row=row, column=col, sticky=tk.W)
 
-        tk.mainloop()
+        # tk.mainloop()
+        self.master.update_idletasks()
+        self.master.update()
 
-    def update_gui(self, board):
+    def update_gui(self):
 
-        for row in range(len(board)):
-            for col in range(len(board[row])):
+        for row in range(len(self.board.board)):
+            for col in range(len(self.board.board[row])):
 
                 if col == 1 or col == 2:
                     wLabel = tk.Label(self.master, image=self.blockImg, pady="0", padx="0", bd=1)
                     wLabel.grid(row=row, column=col, sticky=tk.W)
 
+        self.master.update_idletasks()
+        self.master.update()
 
-
+    def run(self):
+        self.update_gui()
