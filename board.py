@@ -29,14 +29,16 @@ class Board():
                      [0,0,0,0,0,0,0,0,0,0,0]]
 
         #Defines the pieces
-            #6 Pieces
-        self.PIECE_I = [[0,0],[1,0],[2,0],[3,0]]
-        self.PIECE_O = [[0,0],[0,1],[1,0],[1,1]]
-        self.PIECE_T = [[0,1],[1,0],[1,1],[1,2]]
-        self.PIECE_Z = [[0,0],[0,1],[1,1],[1,2]]
-        self.PIECE_L = [[0,0],[0,1],[0,2],[1,2]]
+            #7 Pieces
+        self.PIECE_I = [[0, 0], [0, 1], [0, 2], [0, 3]]
+        self.PIECE_O = [[0, 0], [0, 1], [1, 0], [1, 1]]
+        self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
+        self.PIECE_Z = [[0, 0], [0, 1], [1, 1], [1, 2]]
+        self.PIECE_N = [[1, 0], [1, 1], [0, 1], [0, 2]]
+        self.PIECE_L = [[0, 0], [0, 1], [0, 2], [1, 2]]
+        self.PIECE_J = [[1, 0], [0, 0], [0, 1], [0, 2]]
 
-        self.pieces = [self.PIECE_I, self.PIECE_O, self.PIECE_T, self.PIECE_Z, self.PIECE_L]
+        self.pieces = [self.PIECE_I, self.PIECE_O, self.PIECE_T, self.PIECE_Z, self.PIECE_N, self.PIECE_J, self.PIECE_L]
 
             #7 Colors
         self.shape_colors = [(0, 255, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
