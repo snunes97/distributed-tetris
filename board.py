@@ -53,20 +53,18 @@ class Board():
             print(self.board[i])
 
     def try_move_left(self):
-
-        for pos in self.active_piece.shape_positions:
-            if pos[1] <= 0:
-                return False
-
+        if self.active_piece.check_left(self.board) is True:
+            for pos in self.active_piece.shape_positions:
+                if pos[1] <= 0:
+                    return False
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_left()
 
     def try_move_right(self):
-
-        for pos in self.active_piece.shape_positions:
-            if pos[1] >= 10:
-                return False
-
+        if self.active_piece.check_right(self.board) is True:
+            for pos in self.active_piece.shape_positions:
+                if pos[1] >= 10:
+                    return False
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_right()
 
