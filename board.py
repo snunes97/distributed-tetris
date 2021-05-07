@@ -52,6 +52,7 @@ class Board():
         for i in range(len(self.board)):
             print(self.board[i])
 
+    #confirma se a casa está ocupada e anda lateralmente (verificar redundancia)
     def try_move_left(self):
         if self.active_piece.check_left(self.board) is True:
             for pos in self.active_piece.shape_positions:
@@ -102,9 +103,14 @@ class Board():
 
         #Confirma se não tem peça por baixo
         if self.active_piece.check_bellow(self.board):
+            for pos in self.active_piece.shape_positions:
+                if pos[0] == 0:
+                    break #endgame?
+
             self.draw_shape(2, self.active_piece)
             self.check_line()
             self.place_new_piece()
+
 
         print("/////////////////////////////////////////////////////////")
         self.print_board()
