@@ -1,2 +1,10 @@
 import skeletons
-from game import PORT, HOST
+import game
+
+
+def main():
+    server = skeletons.GameServer(game.HOST, game.PORT, game.GameServer())
+    server.run()
+
+
+main()
