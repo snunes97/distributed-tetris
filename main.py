@@ -3,22 +3,25 @@ from gui import Gui
 from board import Board
 from timer import Timer
 
-stopFlag = threading.Event()
+gui = Gui()
+board = Board(gui)
 
-board = Board()
+gui.start_gui()
 board.place_new_piece()
+board.print_board()
 
-guiThread = Gui(stopFlag, board)
-guiThread.start_gui()
+# # Código para mover automáticamente para baixo
+# threading.Timer(1.0, board.tick).start()
 
-timerThread = Timer(stopFlag, board, guiThread)
-timerThread.start()
+stopFlag = threading.Event()
+thread = Timer(stopFlag, board)
+thread.start()
 
 # this will stop the timer
 # stopFlag.set()
 
 while True:
-    player_input = input("a|d: ")
+    player_input = input("(asd): ")
 
     if player_input == "a":
         board.try_move_left()
