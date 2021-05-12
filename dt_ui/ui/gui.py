@@ -2,12 +2,15 @@ from threading import Thread
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import ttk as ttk
+from multiprocessing import Process, Manager
+import time
 
 class Gui(Thread):
-    def __init__(self, event, board):
+    def __init__(self, queue):
         Thread.__init__(self)
-        self.stopped = event
-        self.board = board
+
+        self.queue = queue
+        self.tick = Process(target=self.update_gui, args=self.queue)
 
         self.BOARDX = 13
         self.BOARDY = 23
@@ -37,21 +40,24 @@ class Gui(Thread):
                     vLabel = tk.Label(self.master, image=self.voidImg, pady="0", padx="0", bd=1)
                     vLabel.grid(row=row, column=col, sticky=tk.W)
 
-        # tk.mainloop()
-        self.master.update_idletasks()
-        self.master.update()
+        self.tick.start()
+
+        tk.mainloop()
 
     def update_gui(self):
 
-        for row in range(len(self.board.board)):
-            for col in range(len(self.board.board[row])):
+        while True:
+            time.sleep(1)
+            print("SPORTING CAMPIAO CHEIO DO COVID")
+            for row in range(len(self.board.board)):
+                for col in range(len(self.board.board[row])):
 
-                if col == 1 or col == 2:
-                    wLabel = tk.Label(self.master, image=self.blockImg, pady="0", padx="0", bd=1)
-                    wLabel.grid(row=row, column=col, sticky=tk.W)
+                    if col == 1 or col == 2:
+                        wLabel = tk.Label(self.master, image=self.blockImg, pady="0", padx="0", bd=1)
+                        wLabel.grid(row=row, column=col, sticky=tk.W)
 
-        self.master.update_idletasks()
-        self.master.update()
+            self.master.update_idletasks()
+            self.master.update()
 
     def run(self):
         self.update_gui()
