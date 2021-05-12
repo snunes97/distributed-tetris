@@ -23,6 +23,8 @@ class GameServer:
         if response == "False":
             print("Player name already in use")
             self.try_enter()
+        else:
+            self.enter_game()
 
     def try_enter(self):
         newName = input("Insert your player name: ")
