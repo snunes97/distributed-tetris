@@ -22,8 +22,8 @@ class GameServer:
         print("Entering game...")
 
     def dispatch_request(self, command):
-        if command == game.OP_NEWPLAYER:
-            print("OP: NEWPLAYER")
+        if command == game.OP_VALIDATEPLAYER:
+            print("OP: VALIDATEPLAYER")
             self.conn.send_string("ACK")
             self.validate_player()
 

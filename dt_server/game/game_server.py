@@ -1,9 +1,9 @@
-from player import Player
+from game.player import Player
 
 
 class GameServer:
-
-    player_list = []
+    player1 = Player("Marin")
+    player_list = [player1]
 
     @staticmethod
     def validate_player(name: str):
