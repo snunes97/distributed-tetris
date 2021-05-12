@@ -1,51 +1,60 @@
+from game.player import Player
 import random
 import copy
-from piece import Piece
+from game.piece import Piece
 
-class Board():
-    def __init__(self):
+class GameServer:
+    player1 = Player("Marin")
+    player_list = [player1]
 
-        #Defines the board
-        self.board = [[0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0,0,0,0]]
+    @staticmethod
+    def validate_player(name: str):
+        for player in GameServer.player_list:
+            if name == player.name:
+                return False
+
+        new_player = Player(name)
+        GameServer.player_list.append(new_player)
+        match1 = Match(new_player)
+        return True
+
+class Match:
+    def __init__(self, player1):
+        self.player1 = player1
+
+        # Defines the board
+        self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
         #Defines the pieces
-            #7 Pieces
-        self.PIECE_I = [[0, 0], [0, 1], [0, 2], [0, 3]]
-        self.PIECE_O = [[0, 0], [0, 1], [1, 0], [1, 1]]
-        self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
-        self.PIECE_Z = [[0, 0], [0, 1], [1, 1], [1, 2]]
-        self.PIECE_N = [[1, 0], [1, 1], [0, 1], [0, 2]]
+            #3 Pieces (T and L - right and left /)
         self.PIECE_L = [[0, 0], [0, 1], [0, 2], [1, 2]]
         self.PIECE_J = [[1, 0], [0, 0], [0, 1], [0, 2]]
+        self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
 
-        self.pieces = [self.PIECE_I, self.PIECE_O, self.PIECE_T, self.PIECE_Z, self.PIECE_N, self.PIECE_J, self.PIECE_L]
-
-            #7 Colors
-        self.shape_colors = [(0, 255, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+        self.pieces = [self.PIECE_T, self.PIECE_J, self.PIECE_L]
 
         self.active_piece = None
         self.timer_on = False
-
 
     def print_board(self):
         # print for testing
@@ -110,7 +119,6 @@ class Board():
             self.draw_shape(2, self.active_piece)
             self.check_line()
             self.place_new_piece()
-
 
         print("/////////////////////////////////////////////////////////")
         self.print_board()
