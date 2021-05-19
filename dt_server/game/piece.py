@@ -35,6 +35,25 @@ class Piece:
             else:
                 return True
 
+    def check_rotation_walls(self, board):
+        blocked_positions = 0
+        current_shape = self.current_shape()
+        for i in range(len(current_shape)):
+            if current_shape[i][1] == 10 or current_shape[i][1] == 0:
+                blocked_positions += 1
+
+        if blocked_positions >= 3:
+            return False
+        return True
+
+    def check_rotation_pieces(self, rotated_shape, board):
+        for i in range(len(rotated_shape)):
+            print("ROTATED: " + str(board[rotated_shape[i][0]][rotated_shape[i][1]]))
+            if board[rotated_shape[i][0]][rotated_shape[i][1]] == 2:
+                print("OVERLAP!")
+                return False
+        return True
+
     def move_down(self):
         current_shape = self.current_shape()
         current_shape[0][0] += 1
@@ -59,12 +78,12 @@ class Piece:
         current_shape[3][1] += 1
         self.rights += 1
 
-    def rotate(self):
-        # ver colisões (entre peças e board) antes de aplicar a rotação
-        self.shapes[self.shape_index] = self.starting_shapes[self.shape_index]
+    def rotate(self, board):
         self.shape_index = (self.shape_index + 1) % 4
 
-        rotated_shape = self.shapes[self.shape_index]
+        rotated_shape = deepcopy(self.shapes[self.shape_index])
+
+        print("NEXT SHAPE ORIGINAL: " + str(rotated_shape))
 
         rotated_shape[0][0] += self.downs
         rotated_shape[1][0] += self.downs
@@ -76,7 +95,19 @@ class Piece:
         rotated_shape[2][1] += self.rights
         rotated_shape[3][1] += self.rights
 
-        self.shapes[self.shape_index] = rotated_shape
+        print("NEXT SHAPE W OFFSET: " + str(rotated_shape))
+
+        if not self.check_rotation_pieces(rotated_shape, board):
+            self.shape_index = (self.shape_index - 1) % 4
+        else:
+            self.shapes[(self.shape_index - 1) % 4] = self.starting_shapes[(self.shape_index - 1) % 4]
+
+            # rotated_shape[0][0] -= 1
+            # rotated_shape[1][0] -= 1
+            # rotated_shape[2][0] -= 1
+            # rotated_shape[3][0] -= 1
+
+            self.shapes[self.shape_index] = rotated_shape
 
     def current_shape(self):
         return self.shapes[self.shape_index]
