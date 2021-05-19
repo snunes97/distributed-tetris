@@ -13,15 +13,15 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -30,18 +30,32 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
         #Defines the pieces
-            #3 Pieces (T and L - right and left /)
+        #3 Pieces (T and L - right and left /)
+
+        #L piece and positions
         self.PIECE_L_UP = [[0, 1], [1, 1], [2, 1], [2, 2]]
         self.PIECE_L_RIGHT = [[1, 0], [1, 1], [1, 2], [2, 0]]
         self.PIECE_L_DOWN = [[0, 0], [0, 1], [1, 1], [2, 1]]
         self.PIECE_L_LEFT = [[1, 0], [1, 1], [1, 2], [0, 2]]
+        # J piece and positions
+        self.PIECE_J_UP = [[0, 1], [1, 1], [2, 1], [2, 0]]
+        self.PIECE_J_RIGHT = [[0, 0], [1, 0], [1, 1], [1, 2]]
+        self.PIECE_J_DOWN = [[0, 1], [0, 2], [1, 1], [2, 1]]
+        self.PIECE_J_LEFT = [[1, 0], [1, 1], [1, 2], [2, 2]]
+        # T piece and positions
+        self.PIECE_T_UP = [[0, 0], [0, 1], [0, 2], [1, 1]]
+        self.PIECE_T_RIGHT = [[0, 0], [1, 0], [2, 0], [1, 1]]
+        self.PIECE_T_DOWN = [[2, 0], [2, 1], [2, 2], [1, 1]]
+        self.PIECE_T_LEFT = [[0, 2], [1, 2], [2, 2], [1, 1]]
 
         piece_l = Piece(self.PIECE_L_UP, self.PIECE_L_RIGHT, self.PIECE_L_DOWN, self.PIECE_L_LEFT)
+        piece_j = Piece(self.PIECE_J_UP, self.PIECE_J_RIGHT, self.PIECE_J_DOWN, self.PIECE_J_LEFT)
+        piece_t = Piece(self.PIECE_T_UP, self.PIECE_T_RIGHT, self.PIECE_T_DOWN, self.PIECE_T_LEFT)
 
-        self.PIECE_J = [[1, 0], [0, 0], [0, 1], [0, 2]]
-        self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
+        # self.PIECE_J = [[1, 0], [0, 0], [0, 1], [0, 2]]
+        # self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
 
-        self.pieces = [piece_l]
+        self.pieces = [piece_l, piece_j, piece_t]
 
         self.active_piece = None
         self.timer_on = False
