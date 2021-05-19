@@ -31,11 +31,17 @@ class Match:
 
         #Defines the pieces
             #3 Pieces (T and L - right and left /)
-        self.PIECE_L = [[0, 0], [0, 1], [0, 2], [1, 2]]
+        self.PIECE_L_UP = [[0, 0], [1, 0], [2, 0], [2, 1]]
+        self.PIECE_L_RIGHT = [[0, 0], [0, 1], [0, 2], [1, 0]]
+        self.PIECE_L_DOWN = [[0, 0], [0, 1], [1, 1], [2, 1]]
+        self.PIECE_L_LEFT = [[1, 0], [1, 1], [1, 2], [0, 2]]
+
+        piece_l = Piece(self.PIECE_L_UP, self.PIECE_L_RIGHT, self.PIECE_L_DOWN, self.PIECE_L_LEFT)
+
         self.PIECE_J = [[1, 0], [0, 0], [0, 1], [0, 2]]
         self.PIECE_T = [[0, 1], [1, 0], [1, 1], [1, 2]]
 
-        self.pieces = [self.PIECE_T, self.PIECE_J, self.PIECE_L]
+        self.pieces = [piece_l]
 
         self.active_piece = None
         self.timer_on = False
@@ -60,19 +66,21 @@ class Match:
         else:
             return False
 
+    def try_rotate(self):
+        self.draw_shape(0, self.active_piece)
+        self.active_piece.rotate()
+
     def draw_shape(self, mode, shape):
         #0-Casa Vazia
         #1-Peca Ativa
         #2-Peca Colocada
-        shape_pos = shape.shape_positions
+        shape_pos = shape.current_shape()
         for position in shape_pos:
-            print(position[0])
-            print(position[1])
             self.board[position[0]][position[1]] = mode
 
     def place_new_piece(self):
         #pick random piece from piece list
-        new_piece = Piece(copy.deepcopy(random.choice(self.pieces)))
+        new_piece = copy.deepcopy(random.choice(self.pieces))
         self.active_piece = new_piece
         self.draw_shape(1, self.active_piece)
 
@@ -87,7 +95,7 @@ class Match:
         self.active_piece.move_down()
         self.draw_shape(1, self.active_piece)
 
-        for pos in self.active_piece.shape_positions:
+        for pos in self.active_piece.current_shape():
             if pos[0] >= 20:
                 self.draw_shape(2, self.active_piece)
                 self.check_line()
@@ -96,7 +104,7 @@ class Match:
 
         #Confirma se não tem peça por baixo
         if self.active_piece.check_below(self.board):
-            for pos in self.active_piece.shape_positions:
+            for pos in self.active_piece.current_shape():
                 if pos[0] == 0:
                     break #endgame?
 

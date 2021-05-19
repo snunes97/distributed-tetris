@@ -32,3 +32,5 @@ class Client():
             self.server.move_left()
         elif command == "d":
             self.server.move_right()
+        elif command == "w":
+            self.server.rotate()

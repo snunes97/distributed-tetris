@@ -27,3 +27,7 @@ class GameServer:
     def move_left(self):
         self.conn.send_string(stubs.OP_MOVELEFT)
         print(self.conn.recv_string())
+
+    def rotate(self):
+        self.conn.send_string(stubs.OP_ROT)
+        print(self.conn.recv_string())

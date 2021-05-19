@@ -34,6 +34,11 @@ class GameServer:
             self.conn.send_string("ACK")
             self.server.move_left()
 
+        if command == game.OP_ROT:
+            print("OP: ROT")
+            self.conn.send_string("ACK")
+            self.server.rotate()
+
     def run(self):
         print("Running...")
         while True:

@@ -29,3 +29,8 @@ class GameServer:
     def move_left():
         GameServer.match.try_move_left()
         GameServer.match.tick()
+
+    @staticmethod
+    def rotate():
+        GameServer.match.try_rotate()
+        GameServer.match.tick()
