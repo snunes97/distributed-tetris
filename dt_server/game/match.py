@@ -40,7 +40,7 @@ class Match:
         # J piece and positions
         self.PIECE_J_UP = [[0, 1], [1, 1], [2, 1], [2, 0]]
         self.PIECE_J_RIGHT = [[0, 0], [1, 0], [1, 1], [1, 2]]
-        self.PIECE_J_DOWN = [[0, 1], [0, 2], [1, 1], [1, 2]]
+        self.PIECE_J_DOWN = [[0, 1], [0, 2], [1, 1], [2, 1]]
         self.PIECE_J_LEFT = [[1, 0], [1, 1], [1, 2], [2, 2]]
         # T piece and positions
         self.PIECE_T_UP = [[0, 0], [0, 1], [0, 2], [1, 1]]
