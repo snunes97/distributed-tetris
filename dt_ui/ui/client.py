@@ -23,8 +23,8 @@ class Client():
 
     def enter_game(self):
         print("Entering game...")
-        # gui = Gui(self.queue)
-        # gui.start_gui()
+        #gui = Gui(self.queue)
+        #gui.start_gui()
         while True:
             self.send_command()
 

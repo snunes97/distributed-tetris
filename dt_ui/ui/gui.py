@@ -10,7 +10,7 @@ class Gui(Thread):
         Thread.__init__(self)
 
         self.queue = queue
-        self.tick = Process(target=self.update_gui, args=self.queue)
+        self.tick = Process(target=self.update_gui(), args=self.queue)
 
         self.BOARDX = 13
         self.BOARDY = 23
@@ -48,7 +48,6 @@ class Gui(Thread):
 
         while True:
             time.sleep(1)
-            print("SPORTING CAMPIAO CHEIO DO COVID")
             for row in range(len(self.board.board)):
                 for col in range(len(self.board.board[row])):
 
