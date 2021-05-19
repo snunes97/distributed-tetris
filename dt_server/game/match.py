@@ -43,10 +43,10 @@ class Match:
         self.PIECE_J_DOWN = [[0, 1], [0, 2], [1, 1], [2, 1]]
         self.PIECE_J_LEFT = [[1, 0], [1, 1], [1, 2], [2, 2]]
         # T piece and positions
-        self.PIECE_T_UP = [[0, 0], [0, 1], [0, 2], [1, 1]]
-        self.PIECE_T_RIGHT = [[0, 0], [1, 0], [2, 0], [1, 1]]
-        self.PIECE_T_DOWN = [[2, 0], [2, 1], [2, 2], [1, 1]]
-        self.PIECE_T_LEFT = [[0, 2], [1, 2], [2, 2], [1, 1]]
+        self.PIECE_T_UP = [[1, 0], [1, 1], [1, 2], [0, 1]]
+        self.PIECE_T_RIGHT = [[0, 1], [1, 1], [2, 1], [1, 2]]
+        self.PIECE_T_DOWN = [[1, 0], [1, 1], [1, 2], [2, 1]]
+        self.PIECE_T_LEFT = [[1, 0], [0, 1], [1, 1], [2, 1]]
 
         piece_l = Piece(self.PIECE_L_UP, self.PIECE_L_RIGHT, self.PIECE_L_DOWN, self.PIECE_L_LEFT)
         piece_j = Piece(self.PIECE_J_UP, self.PIECE_J_RIGHT, self.PIECE_J_DOWN, self.PIECE_J_LEFT)
