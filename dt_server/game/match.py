@@ -31,8 +31,8 @@ class Match:
 
         #Defines the pieces
             #3 Pieces (T and L - right and left /)
-        self.PIECE_L_UP = [[0, 0], [1, 0], [2, 0], [2, 1]]
-        self.PIECE_L_RIGHT = [[0, 0], [0, 1], [0, 2], [1, 0]]
+        self.PIECE_L_UP = [[0, 1], [1, 1], [2, 1], [2, 2]]
+        self.PIECE_L_RIGHT = [[1, 0], [1, 1], [1, 2], [2, 0]]
         self.PIECE_L_DOWN = [[0, 0], [0, 1], [1, 1], [2, 1]]
         self.PIECE_L_LEFT = [[1, 0], [1, 1], [1, 2], [0, 2]]
 

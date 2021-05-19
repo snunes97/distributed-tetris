@@ -60,8 +60,7 @@ class Piece:
         self.rights += 1
 
     def rotate(self):
-        # ver se está na ultima rotação da lista
-        # ver colisões antes de aplicar a rotação
+        # ver colisões (entre peças e board) antes de aplicar a rotação
         self.shapes[self.shape_index] = self.starting_shapes[self.shape_index]
         self.shape_index = (self.shape_index + 1) % 4
 

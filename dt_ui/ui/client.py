@@ -1,6 +1,9 @@
 from stubs.game_server import GameServer
 from ui.gui import Gui
 from multiprocessing import Queue
+#from pynput import keyboard
+from pynput.keyboard import Listener
+
 
 
 class Client():
@@ -25,12 +28,17 @@ class Client():
         while True:
             self.send_command()
 
-    def send_command(self):
-        command = input("::> ")
-
-        if command == "a":
+    def on_press(self, key):
+        print("Key pressed: {0}".format(key))
+        if key.char == "a":
             self.server.move_left()
-        elif command == "d":
+        elif key.char == "d":
             self.server.move_right()
-        elif command == "w":
+        elif key.char == "w":
             self.server.rotate()
+
+
+    def send_command(self):
+        with Listener(on_press=self.on_press) as listener:  # Create an instance of Listener
+            listener.join()  # Join the listener thread to the main thread to keep waiting for keys
+
