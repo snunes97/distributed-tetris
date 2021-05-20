@@ -39,6 +39,26 @@ class GameServer:
             self.conn.send_string("ACK")
             self.server.rotate()
 
+        if command == game.OP_GETBOARD:
+            print("OP: GETBOARD")
+            board = self.server.get_board()
+            board_string = self.board_to_string(board)
+            self.conn.send_string(board_string)
+
+    def board_to_string(self, board):
+        board_string = ""
+        line_start = True
+        for line in board:
+            for element in line:
+                if line_start:
+                    line_start = False
+                    board_string += str(element)
+                else:
+                    board_string += "," + str(element)
+            board_string += ";"
+            line_start = True
+        return board_string
+
     def run(self):
         print("Running...")
         while True:

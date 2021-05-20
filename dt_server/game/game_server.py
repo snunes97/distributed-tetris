@@ -34,3 +34,7 @@ class GameServer:
     def rotate():
         GameServer.match.try_rotate()
         GameServer.match.tick()
+
+    @staticmethod
+    def get_board():
+        return GameServer.match.get_board()

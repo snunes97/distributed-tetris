@@ -65,6 +65,9 @@ class Match:
         for i in range(len(self.board)):
             print(self.board[i])
 
+    def get_board(self):
+        return self.board
+
     #confirma se a casa está ocupada e anda lateralmente (verificar redundancia)
     def try_move_left(self):
         if not self.active_piece.check_left(self.board):
