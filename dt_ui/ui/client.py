@@ -38,8 +38,11 @@ class Client():
         elif key.char == "d":
             self.server.move_right()
             self.get_board()
-        elif key.char == "w":
-            self.server.rotate()
+        elif key.char == "e":
+            self.server.rotate_right()
+            self.get_board()
+        elif key.char == "q":
+            self.server.rotate_left()
             self.get_board()
 
 

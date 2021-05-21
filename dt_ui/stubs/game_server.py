@@ -28,8 +28,12 @@ class GameServer:
         self.conn.send_string(stubs.OP_MOVELEFT)
         print(self.conn.recv_string())
 
-    def rotate(self):
-        self.conn.send_string(stubs.OP_ROT)
+    def rotate_right(self):
+        self.conn.send_string(stubs.OP_ROT_R)
+        print(self.conn.recv_string())
+
+    def rotate_left(self):
+        self.conn.send_string(stubs.OP_ROT_L)
         print(self.conn.recv_string())
 
     def get_board(self):

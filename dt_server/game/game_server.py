@@ -31,8 +31,13 @@ class GameServer:
         GameServer.match.tick()
 
     @staticmethod
-    def rotate():
-        GameServer.match.try_rotate()
+    def rotate_right():
+        GameServer.match.try_rotate(1)
+        GameServer.match.tick()
+
+    @staticmethod
+    def rotate_left():
+        GameServer.match.try_rotate(0)
         GameServer.match.tick()
 
     @staticmethod

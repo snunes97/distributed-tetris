@@ -83,12 +83,14 @@ class Match:
         else:
             return False
 
-    def try_rotate(self):
+    def try_rotate(self, right):
         if self.active_piece.check_rotation_walls(self.board):
             self.draw_shape(0, self.active_piece)
-            self.active_piece.rotate(self.board)
+            self.active_piece.rotate(self.board, right)
         else:
             return False
+
+
 
     def draw_shape(self, mode, shape):
         #0-Casa Vazia
@@ -98,10 +100,12 @@ class Match:
         for position in shape_pos:
             self.board[position[0]][position[1]] = mode
 
+
     def place_new_piece(self):
         #pick random piece from piece list
         new_piece = copy.deepcopy(random.choice(self.pieces))
         self.active_piece = new_piece
+        self.active_piece.piece_offset()
         self.draw_shape(1, self.active_piece)
 
     def check_line(self):

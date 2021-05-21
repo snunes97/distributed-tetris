@@ -1,4 +1,5 @@
 from copy import deepcopy
+import random
 
 class Piece:
     def __init__(self, shape_up, shape_right, shape_down, shape_left):
@@ -78,8 +79,12 @@ class Piece:
         current_shape[3][1] += 1
         self.rights += 1
 
-    def rotate(self, board):
-        self.shape_index = (self.shape_index + 1) % 4
+    def rotate(self, board, right):
+
+        if right:
+            self.shape_index = (self.shape_index + 1) % 4
+        else:
+            self.shape_index = (self.shape_index - 1) % 4
 
         rotated_shape = deepcopy(self.shapes[self.shape_index])
 
@@ -98,16 +103,24 @@ class Piece:
         print("NEXT SHAPE W OFFSET: " + str(rotated_shape))
 
         if not self.check_rotation_pieces(rotated_shape, board):
-            self.shape_index = (self.shape_index - 1) % 4
+            if right:
+                self.shape_index = (self.shape_index - 1) % 4
+            else:
+                self.shape_index = (self.shape_index + 1) % 4
         else:
-            self.shapes[(self.shape_index - 1) % 4] = self.starting_shapes[(self.shape_index - 1) % 4]
-
-            # rotated_shape[0][0] -= 1
-            # rotated_shape[1][0] -= 1
-            # rotated_shape[2][0] -= 1
-            # rotated_shape[3][0] -= 1
+            if right:
+                self.shapes[(self.shape_index - 1) % 4] = self.starting_shapes[(self.shape_index - 1) % 4]
+            else:
+                self.shapes[(self.shape_index + 1) % 4] = self.starting_shapes[(self.shape_index + 1) % 4]
 
             self.shapes[self.shape_index] = rotated_shape
 
     def current_shape(self):
         return self.shapes[self.shape_index]
+
+    def piece_offset(self):
+        offset = random.randrange(8)
+        for shape in self.starting_shapes:
+            for i in range(len(shape)):
+                shape[i][1] += offset
+        self.shapes = [deepcopy(self.shape_up), deepcopy(self.shape_right), deepcopy(self.shape_down), deepcopy(self.shape_left)]

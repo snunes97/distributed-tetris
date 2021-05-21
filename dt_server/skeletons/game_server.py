@@ -34,10 +34,15 @@ class GameServer:
             self.conn.send_string("ACK")
             self.server.move_left()
 
-        if command == game.OP_ROT:
-            print("OP: ROT")
+        if command == game.OP_ROT_R:
+            print("OP: ROTRIGHT")
             self.conn.send_string("ACK")
-            self.server.rotate()
+            self.server.rotate_right()
+
+        if command == game.OP_ROT_L:
+            print("OP: ROTLEFT")
+            self.conn.send_string("ACK")
+            self.server.rotate_left()
 
         if command == game.OP_GETBOARD:
             print("OP: GETBOARD")
