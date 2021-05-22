@@ -1,10 +1,13 @@
 import random
+import threading
 import copy
 from game.piece import Piece
 
 class Match:
     def __init__(self, player1):
         self.player1 = player1
+
+        self.timer_time = 1
 
         # Defines the board
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -90,8 +93,6 @@ class Match:
         else:
             return False
 
-
-
     def draw_shape(self, mode, shape):
         #0-Casa Vazia
         #1-Peca Ativa
@@ -99,7 +100,6 @@ class Match:
         shape_pos = shape.current_shape()
         for position in shape_pos:
             self.board[position[0]][position[1]] = mode
-
 
     def place_new_piece(self):
         #pick random piece from piece list
@@ -113,6 +113,9 @@ class Match:
             if 0 not in line:
                 self.board.remove(line)
                 self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+    def start_timer(self):
+        threading.Timer(self.timer_time, self.tick).start()
 
     def tick(self):
         self.draw_shape(0, self.active_piece)
@@ -135,6 +138,7 @@ class Match:
             self.draw_shape(2, self.active_piece)
             self.check_line()
             self.place_new_piece()
+        threading.Timer(self.timer_time, self.tick).start()
 
         print("/////////////////////////////////////////////////////////")
         self.print_board()

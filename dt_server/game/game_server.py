@@ -4,7 +4,16 @@ from game.match import Match
 
 class GameServer:
     match = None
-    player_list = []
+    p_test = Player("coisa")
+    player_list = [p_test]
+
+    @staticmethod
+    def start_new_match(player1):
+        match1 = Match(player1)
+        GameServer.match = match1
+        GameServer.match.place_new_piece()
+        GameServer.match.print_board()
+        GameServer.match.start_timer()
 
     @staticmethod
     def validate_player(name: str):
@@ -14,31 +23,28 @@ class GameServer:
 
         new_player = Player(name)
         GameServer.player_list.append(new_player)
-        match1 = Match(new_player)
-        GameServer.match = match1
-        GameServer.match.place_new_piece()
-        GameServer.match.print_board()
+        GameServer.start_new_match(new_player)
         return True
 
     @staticmethod
     def move_right():
         GameServer.match.try_move_right()
-        GameServer.match.tick()
+        # GameServer.match.tick()
 
     @staticmethod
     def move_left():
         GameServer.match.try_move_left()
-        GameServer.match.tick()
+        # GameServer.match.tick()
 
     @staticmethod
     def rotate_right():
         GameServer.match.try_rotate(1)
-        GameServer.match.tick()
+        # GameServer.match.tick()
 
     @staticmethod
     def rotate_left():
         GameServer.match.try_rotate(0)
-        GameServer.match.tick()
+        # GameServer.match.tick()
 
     @staticmethod
     def get_board():
