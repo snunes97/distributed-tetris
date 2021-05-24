@@ -14,7 +14,6 @@ class Client():
         self.name = ""
 
     def start_board_update_requests(self):
-        print("updating")
         threading.Timer(self.BOARD_UPDATE_RATE, self.request_board_update).start()
 
     def request_board_update(self):

@@ -113,6 +113,8 @@ class Match:
             if 0 not in line:
                 self.board.remove(line)
                 self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                self.player1.add_score(1)
+                print(self.player1.get_name() + ": " + str(self.player1.get_score()))
 
     def start_timer(self):
         threading.Timer(self.timer_time, self.tick, [1]).start()
