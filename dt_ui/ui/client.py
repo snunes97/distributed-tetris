@@ -1,5 +1,6 @@
 from stubs.game_server import GameServer
 from ui.gui import Gui
+import threading
 from multiprocessing import Queue
 #from pynput import keyboard
 from pynput.keyboard import Listener
@@ -7,9 +8,18 @@ from pynput.keyboard import Listener
 
 class Client():
     def __init__(self, server):
+        self.BOARD_UPDATE_RATE = 1
         self.server = server
         self.queue = Queue
         self.name = ""
+
+    def start_board_update_requests(self):
+        print("updating")
+        threading.Timer(self.BOARD_UPDATE_RATE, self.request_board_update).start()
+
+    def request_board_update(self):
+        self.print_board(self.format_board(self.server.get_board()))
+        self.start_board_update_requests()
 
     def try_enter(self):
         new_name = input("Insert your player name: ")
@@ -18,6 +28,7 @@ class Client():
         if is_validated == "True":
             self.name = new_name
             self.enter_game()
+            self.start_board_update_requests()
         else:
             print("Player name already in use")
             self.try_enter()
@@ -27,6 +38,10 @@ class Client():
         # gui = Gui(self.queue)
         # gui.start_gui()
         self.print_board(self.format_board(self.server.get_board()))
+        input_listener = threading.Thread(target=self.start_input_listener)
+        input_listener.start()
+
+    def start_input_listener(self):
         while True:
             self.send_command()
 
@@ -44,7 +59,6 @@ class Client():
         elif key.char == "q":
             self.server.rotate_left()
             self.get_board()
-
 
     def send_command(self):
         with Listener(on_press=self.on_press) as listener:  # Create an instance of Listener

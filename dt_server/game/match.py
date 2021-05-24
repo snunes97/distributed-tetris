@@ -115,9 +115,9 @@ class Match:
                 self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def start_timer(self):
-        threading.Timer(self.timer_time, self.tick).start()
+        threading.Timer(self.timer_time, self.tick, [1]).start()
 
-    def tick(self):
+    def tick(self, timed):
         self.draw_shape(0, self.active_piece)
         self.active_piece.move_down()
         self.draw_shape(1, self.active_piece)
@@ -138,7 +138,9 @@ class Match:
             self.draw_shape(2, self.active_piece)
             self.check_line()
             self.place_new_piece()
-        threading.Timer(self.timer_time, self.tick).start()
+
+        if timed:
+            self.start_timer()
 
         print("/////////////////////////////////////////////////////////")
         self.print_board()

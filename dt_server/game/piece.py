@@ -49,9 +49,7 @@ class Piece:
 
     def check_rotation_pieces(self, rotated_shape, board):
         for i in range(len(rotated_shape)):
-            print("ROTATED: " + str(board[rotated_shape[i][0]][rotated_shape[i][1]]))
             if board[rotated_shape[i][0]][rotated_shape[i][1]] == 2:
-                print("OVERLAP!")
                 return False
         return True
 
@@ -88,7 +86,7 @@ class Piece:
 
         rotated_shape = deepcopy(self.shapes[self.shape_index])
 
-        print("NEXT SHAPE ORIGINAL: " + str(rotated_shape))
+        # print("NEXT SHAPE ORIGINAL: " + str(rotated_shape))
 
         rotated_shape[0][0] += self.downs
         rotated_shape[1][0] += self.downs
@@ -100,7 +98,7 @@ class Piece:
         rotated_shape[2][1] += self.rights
         rotated_shape[3][1] += self.rights
 
-        print("NEXT SHAPE W OFFSET: " + str(rotated_shape))
+        # print("NEXT SHAPE W OFFSET: " + str(rotated_shape))
 
         if not self.check_rotation_pieces(rotated_shape, board):
             if right:

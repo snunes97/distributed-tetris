@@ -29,22 +29,22 @@ class GameServer:
     @staticmethod
     def move_right():
         GameServer.match.try_move_right()
-        # GameServer.match.tick()
+        GameServer.match.tick(0)
 
     @staticmethod
     def move_left():
         GameServer.match.try_move_left()
-        # GameServer.match.tick()
+        GameServer.match.tick(0)
 
     @staticmethod
     def rotate_right():
         GameServer.match.try_rotate(1)
-        # GameServer.match.tick()
+        GameServer.match.tick(0)
 
     @staticmethod
     def rotate_left():
         GameServer.match.try_rotate(0)
-        # GameServer.match.tick()
+        GameServer.match.tick(0)
 
     @staticmethod
     def get_board():
