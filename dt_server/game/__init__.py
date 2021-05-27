@@ -1,7 +1,8 @@
 from game_server import GameServer
 from player import Player
 
-PORT = 5001
+PORT_REQREP = 5001
+PORT_PUBSUB = 5002
 HOST = "127.0.0.1"
 
 OP_VALIDATEPLAYER = "VALIDATEPLAYER"
