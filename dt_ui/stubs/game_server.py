@@ -1,12 +1,15 @@
+import time
+
 import zmq
 import stubs
-
+import threading
 
 class GameServer:
     def __init__(self, host: str, port_reqrep: int, port_pubsub: int) -> None:
         self.host = host
         self.port_reqrep = port_reqrep
         self.port_pubsub = port_pubsub
+        self.board_updates = []
 
         context = zmq.Context()
 
@@ -20,6 +23,21 @@ class GameServer:
 
         print("Connected!")
 
+        topic_filter = "boardupdate"
+        self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
+
+        threading.Thread(target=self.get_board_update_message).start()
+
+    def get_board_update_message(self):
+        while True:
+            message = self.conn_pubsub.recv_string()
+            topic, board = message.split()
+            self.board_updates.append(board)
+            time.sleep(1)
+
+    def get_board_update(self):
+        return self.board_updates.pop(0)
+
     def validate_player(self, name: str):
         self.conn_reqrep.send_string(stubs.OP_VALIDATEPLAYER)
         print(self.conn_reqrep.recv_string())
@@ -29,19 +47,19 @@ class GameServer:
 
     def move_right(self):
         self.conn_reqrep.send_string(stubs.OP_MOVERIGHT)
-        print(self.conn_reqrep.recv_string())
+        return self.conn_reqrep.recv_string()
 
     def move_left(self):
         self.conn_reqrep.send_string(stubs.OP_MOVELEFT)
-        print(self.conn_reqrep.recv_string())
+        return self.conn_reqrep.recv_string()
 
     def rotate_right(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_R)
-        print(self.conn_reqrep.recv_string())
+        return self.conn_reqrep.recv_string()
 
     def rotate_left(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_L)
-        print(self.conn_reqrep.recv_string())
+        return self.conn_reqrep.recv_string()
 
     def get_board(self):
         self.conn_reqrep.send_string(stubs.OP_GETBOARD)

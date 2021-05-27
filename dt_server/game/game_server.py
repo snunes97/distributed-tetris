@@ -4,8 +4,8 @@ from game.match import Match
 
 class GameServer:
     match = None
-    p_test = Player("coisa")
-    player_list = [p_test]
+    min_players = 1
+    player_list = []
 
     @staticmethod
     def start_new_match(player1):
@@ -23,8 +23,10 @@ class GameServer:
 
         new_player = Player(name)
         GameServer.player_list.append(new_player)
-        GameServer.start_new_match(new_player)
-        return True
+
+        if len(GameServer.player_list) == GameServer.min_players:
+            GameServer.start_new_match(new_player)
+            return True
 
     @staticmethod
     def move_right():
@@ -49,3 +51,8 @@ class GameServer:
     @staticmethod
     def get_board():
         return GameServer.match.get_board()
+
+    @staticmethod
+    def match_exists():
+        # print("match exists: " + str(GameServer.match is not None))
+        return GameServer.match is not None

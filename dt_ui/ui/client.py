@@ -1,3 +1,5 @@
+import time
+
 from stubs.game_server import GameServer
 from ui.gui import Gui
 import threading
@@ -13,12 +15,10 @@ class Client():
         self.queue = Queue
         self.name = ""
 
-    def start_board_update_requests(self):
-        threading.Timer(self.BOARD_UPDATE_RATE, self.request_board_update).start()
-
     def request_board_update(self):
-        self.print_board(self.format_board(self.server.get_board()))
-        self.start_board_update_requests()
+        while True:
+            self.print_board(self.format_board(self.server.get_board_update()))
+            time.sleep(1)
 
     def try_enter(self):
         new_name = input("Insert your player name: ")
@@ -27,7 +27,7 @@ class Client():
         if is_validated == "True":
             self.name = new_name
             self.enter_game()
-            self.start_board_update_requests()
+            threading.Timer(self.BOARD_UPDATE_RATE, self.request_board_update).start()
         else:
             print("Player name already in use")
             self.try_enter()
@@ -47,17 +47,13 @@ class Client():
     def on_press(self, key):
         print("Key pressed: {0}".format(key))
         if key.char == "a":
-            self.server.move_left()
-            self.get_board()
+            self.print_board(self.format_board(self.server.move_left()))
         elif key.char == "d":
-            self.server.move_right()
-            self.get_board()
+            self.print_board(self.format_board(self.server.move_right()))
         elif key.char == "e":
-            self.server.rotate_right()
-            self.get_board()
+            self.print_board(self.format_board(self.server.rotate_right()))
         elif key.char == "q":
-            self.server.rotate_left()
-            self.get_board()
+            self.print_board(self.format_board(self.server.rotate_left()))
 
     def send_command(self):
         with Listener(on_press=self.on_press) as listener:  # Create an instance of Listener
@@ -74,6 +70,7 @@ class Client():
     def print_board(self, board):
         # print for testing
         for i in range(len(board)):
+            print(board[i])
             print(board[i])
 
     def get_board(self):

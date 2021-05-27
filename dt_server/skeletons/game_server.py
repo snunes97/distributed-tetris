@@ -1,6 +1,7 @@
 import zmq
 import game as game
-
+import time
+import threading
 
 class GameServer:
     def __init__(self, host: str, port_reqrep: int, port_pubsub: int, server: game.GameServer) -> None:
@@ -8,6 +9,7 @@ class GameServer:
         self.port_pubsub = port_pubsub
         self.host = host
         self.server = server
+        self.pubsub_topic = "boardupdate"
 
         context = zmq.Context()
         print("Opening game server...")
@@ -18,6 +20,17 @@ class GameServer:
         self.conn_pubsub = context.socket(zmq.PUB)
         self.conn_pubsub.bind("tcp://" + self.host + ":" + str(self.port_pubsub))
         print("PUBSUB connection successful!")
+
+        threading.Thread(target=self.publish_board_update).start()
+
+    def publish_board_update(self):
+        while True:
+            if self.server.match_exists():
+                message = self.server.get_board()
+                self.conn_pubsub.send(str(self.pubsub_topic) + " " + message)
+                time.sleep(1)
+            else:
+                time.sleep(1)
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()
@@ -32,29 +45,32 @@ class GameServer:
 
         if command == game.OP_MOVERIGHT:
             print("OP: MOVERIGHT")
-            self.conn_repreq.send_string("ACK")
             self.server.move_right()
+            self.send_board()
 
         if command == game.OP_MOVELEFT:
             print("OP: MOVELEFT")
-            self.conn_repreq.send_string("ACK")
             self.server.move_left()
+            self.send_board()
 
         if command == game.OP_ROT_R:
             print("OP: ROTRIGHT")
-            self.conn_repreq.send_string("ACK")
             self.server.rotate_right()
+            self.send_board()
 
         if command == game.OP_ROT_L:
             print("OP: ROTLEFT")
-            self.conn_repreq.send_string("ACK")
             self.server.rotate_left()
+            self.send_board()
 
         if command == game.OP_GETBOARD:
             print("OP: GETBOARD")
-            board = self.server.get_board()
-            board_string = self.board_to_string(board)
-            self.conn_repreq.send_string(board_string)
+            self.send_board()
+
+    def send_board(self):
+        board = self.server.get_board()
+        board_string = self.board_to_string(board)
+        self.conn_repreq.send_string(board_string)
 
     def board_to_string(self, board):
         board_string = ""
