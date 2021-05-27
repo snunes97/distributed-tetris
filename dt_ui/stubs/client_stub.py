@@ -1,10 +1,9 @@
-import time
-
-import zmq
 import stubs
+import time
+import zmq
 import threading
 
-class GameServer:
+class ClientStub:
     def __init__(self, host: str, port_reqrep: int, port_pubsub: int) -> None:
         self.host = host
         self.port_reqrep = port_reqrep

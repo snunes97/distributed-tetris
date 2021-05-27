@@ -1,14 +1,12 @@
 import time
 
-from stubs.game_server import GameServer
+from stubs.client_stub import ClientStub
 from ui.gui import Gui
 import threading
-from multiprocessing import Queue
-#from pynput import keyboard
 from pynput.keyboard import Listener
 
 
-class Client():
+class Client:
     def __init__(self, server):
         self.BOARD_UPDATE_RATE = 1
         self.server = server

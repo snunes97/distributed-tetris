@@ -3,7 +3,7 @@ import game
 
 
 def main():
-    server = skeletons.GameServer(game.HOST, game.PORT_REQREP, game.PORT_PUBSUB, game.GameServer())
+    server = skeletons.ServerSkeleton(skeletons.HOST, skeletons.PORT_REQREP, skeletons.PORT_PUBSUB, game.Server())
     server.run()
 
 

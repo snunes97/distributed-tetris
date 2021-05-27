@@ -1,4 +1,4 @@
-from stubs.game_server import GameServer
+from stubs.client_stub import ClientStub
 
 HOST = "127.0.0.1"
 PORT_REQREP = 5001

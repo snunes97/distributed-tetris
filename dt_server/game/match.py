@@ -4,8 +4,9 @@ import copy
 from game.piece import Piece
 
 class Match:
-    def __init__(self, player1):
+    def __init__(self, player1, server):
         self.player1 = player1
+        self.server = server
 
         self.timer_time = 1
 
@@ -144,5 +145,7 @@ class Match:
         if timed:
             self.start_timer()
 
-        print("/////////////////////////////////////////////////////////")
-        self.print_board()
+        # print("/////////////////////////////////////////////////////////")
+        # self.print_board()
+        #TODO: publish board update
+

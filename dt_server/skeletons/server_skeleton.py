@@ -1,10 +1,11 @@
+import skeletons
 import zmq
 import game as game
 import time
 import threading
 
-class GameServer:
-    def __init__(self, host: str, port_reqrep: int, port_pubsub: int, server: game.GameServer) -> None:
+class ServerSkeleton:
+    def __init__(self, host: str, port_reqrep: int, port_pubsub: int, server: game.Server) -> None:
         self.port_reqrep = port_reqrep
         self.port_pubsub = port_pubsub
         self.host = host
@@ -38,36 +39,36 @@ class GameServer:
         self.conn_repreq.send_string(str(response))
 
     def dispatch_request(self, command):
-        if command == game.OP_VALIDATEPLAYER:
+        if command == skeletons.OP_VALIDATEPLAYER:
             print("OP: VALIDATEPLAYER")
             self.conn_repreq.send_string("ACK")
             self.validate_player()
 
-        if command == game.OP_MOVERIGHT:
+        if command == skeletons.OP_MOVERIGHT:
             print("OP: MOVERIGHT")
             self.server.move_right()
             self.send_board()
 
-        if command == game.OP_MOVELEFT:
+        if command == skeletons.OP_MOVELEFT:
             print("OP: MOVELEFT")
             self.server.move_left()
             self.send_board()
 
-        if command == game.OP_ROT_R:
+        if command == skeletons.OP_ROT_R:
             print("OP: ROTRIGHT")
             self.server.rotate_right()
             self.send_board()
 
-        if command == game.OP_ROT_L:
+        if command == skeletons.OP_ROT_L:
             print("OP: ROTLEFT")
             self.server.rotate_left()
             self.send_board()
 
-        if command == game.OP_GETBOARD:
+        if command == skeletons.OP_GETBOARD:
             print("OP: GETBOARD")
             self.send_board()
 
-        if command == game.OP_MATCHEXISTS:
+        if command == skeletons.OP_MATCHEXISTS:
             print("OP: MATCHEXISTS")
             self.conn_repreq.send(bytes(self.server.check_game_start()))
 
