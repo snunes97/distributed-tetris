@@ -8,7 +8,7 @@ class ClientStub:
         self.host = host
         self.port_reqrep = port_reqrep
         self.port_pubsub = port_pubsub
-        self.board_updates = []
+        self.latest_board = None
 
         context = zmq.Context()
 
@@ -31,14 +31,15 @@ class ClientStub:
         while True:
             message = self.conn_pubsub.recv_string()
             topic, board = message.split()
-            self.board_updates.append(board)
-            time.sleep(1)
+            self.latest_board = board
+            time.sleep(0.2)
 
     def get_board_update(self):
-        return self.board_updates.pop(0)
+        if self.latest_board is not None:
+            return self.latest_board
 
     def has_board_updates(self):
-        return len(self.board_updates) > 0
+        return self.latest_board is not None
 
     def validate_player(self, name: str):
         self.conn_reqrep.send_string(stubs.OP_VALIDATEPLAYER)
@@ -49,22 +50,18 @@ class ClientStub:
 
     def move_right(self):
         self.conn_reqrep.send_string(stubs.OP_MOVERIGHT)
-        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def move_left(self):
         self.conn_reqrep.send_string(stubs.OP_MOVELEFT)
-        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def rotate_right(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_R)
-        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def rotate_left(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_L)
-        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def get_board(self):
@@ -75,5 +72,5 @@ class ClientStub:
         self.conn_reqrep.send_string(stubs.OP_MATCHEXISTS)
         return self.conn_reqrep.recv_string()
 
-    def clear_board_updates(self):
-        self.board_updates = []
+    # def clear_board_updates(self):
+    #     self.board_updates = []

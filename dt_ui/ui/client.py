@@ -17,7 +17,7 @@ class Client:
         while True:
             if self.server.has_board_updates():
                 self.print_board(self.format_board(self.server.get_board_update()))
-                time.sleep(0.5)
+                time.sleep(1)
 
     def try_enter(self):
         new_name = input("Insert your player name: ")

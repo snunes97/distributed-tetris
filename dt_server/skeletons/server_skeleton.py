@@ -22,16 +22,20 @@ class ServerSkeleton:
         self.conn_pubsub.bind("tcp://" + self.host + ":" + str(self.port_pubsub))
         print("PUBSUB connection successful!")
 
-        threading.Thread(target=self.publish_board_update).start()
+        # threading.Thread(target=self.publish_board_update).start()
 
-    def publish_board_update(self):
-        while True:
-            if self.server.match_exists():
-                message = self.server.get_board()
-                self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(message))
-                time.sleep(1)
-            else:
-                time.sleep(1)
+    # def publish_board_update(self):
+    #     while True:
+    #         if self.server.match_exists():
+    #             message = self.server.get_board()
+    #             self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(message))
+    #             time.sleep(1)
+    #         else:
+    #             time.sleep(1)
+
+    def send_board_update(self, board):
+        if self.server.match_exists():
+            self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(board))
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()

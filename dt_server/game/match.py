@@ -8,7 +8,7 @@ class Match:
         self.player1 = player1
         self.server = server
 
-        self.timer_time = 1
+        self.TICK_RATE = 1
 
         # Defines the board
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -118,7 +118,7 @@ class Match:
                 print(self.player1.get_name() + ": " + str(self.player1.get_score()))
 
     def start_timer(self):
-        threading.Timer(self.timer_time, self.tick, [1]).start()
+        threading.Timer(self.TICK_RATE, self.tick, [1]).start()
 
     def tick(self, timed):
         self.draw_shape(0, self.active_piece)
@@ -148,4 +148,5 @@ class Match:
         # print("/////////////////////////////////////////////////////////")
         # self.print_board()
         #TODO: publish board update
+        self.server.send_board_update(self.board)
 

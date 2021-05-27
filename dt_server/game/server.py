@@ -3,6 +3,7 @@ from game.match import Match
 
 
 class Server:
+    skeleton = None
     match = None
     min_players = 1
     player_list = []
@@ -58,5 +59,12 @@ class Server:
 
     @staticmethod
     def match_exists():
-        # print("match exists: " + str(GameServer.match is not None))
         return Server.match is not None
+
+    @staticmethod
+    def send_board_update(board):
+        Server.skeleton.send_board_update(board)
+
+    @staticmethod
+    def set_skeleton(skeleton):
+        Server.skeleton = skeleton
