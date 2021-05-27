@@ -23,10 +23,14 @@ class GameServer:
 
         new_player = Player(name)
         GameServer.player_list.append(new_player)
+        return True
 
+    @staticmethod
+    def check_game_start():
         if len(GameServer.player_list) == GameServer.min_players:
-            GameServer.start_new_match(new_player)
+            GameServer.start_new_match(GameServer.player_list[0])
             return True
+        return False
 
     @staticmethod
     def move_right():

@@ -38,6 +38,9 @@ class GameServer:
     def get_board_update(self):
         return self.board_updates.pop(0)
 
+    def has_board_updates(self):
+        return len(self.board_updates) > 0
+
     def validate_player(self, name: str):
         self.conn_reqrep.send_string(stubs.OP_VALIDATEPLAYER)
         print(self.conn_reqrep.recv_string())
@@ -63,4 +66,8 @@ class GameServer:
 
     def get_board(self):
         self.conn_reqrep.send_string(stubs.OP_GETBOARD)
+        return self.conn_reqrep.recv_string()
+
+    def match_exists(self):
+        self.conn_reqrep.send_string(stubs.OP_MATCHEXISTS)
         return self.conn_reqrep.recv_string()

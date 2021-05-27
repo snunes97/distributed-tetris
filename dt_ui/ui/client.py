@@ -17,8 +17,9 @@ class Client():
 
     def request_board_update(self):
         while True:
-            self.print_board(self.format_board(self.server.get_board_update()))
-            time.sleep(1)
+            if self.server.has_board_updates():
+                self.print_board(self.format_board(self.server.get_board_update()))
+                time.sleep(1)
 
     def try_enter(self):
         new_name = input("Insert your player name: ")
@@ -26,11 +27,20 @@ class Client():
 
         if is_validated == "True":
             self.name = new_name
-            self.enter_game()
-            threading.Timer(self.BOARD_UPDATE_RATE, self.request_board_update).start()
+            threading.Thread(target=self.wait_for_match).start()
         else:
             print("Player name already in use")
             self.try_enter()
+
+    def wait_for_match(self):
+        while True:
+            if self.server.match_exists():
+                self.enter_game()
+                threading.Thread(target=self.request_board_update).start()
+                break
+            else:
+                print("Waiting for match...")
+                time.sleep(1)
 
     def enter_game(self):
         print("Entering game...")
@@ -64,13 +74,13 @@ class Client():
         rows = board_string.split(";")
         for row in rows:
             # elements = row.split(",")
-            formatted_board.append(row)
+            formatted_board.append(row.replace(",", " "))
         return formatted_board
 
     def print_board(self, board):
         # print for testing
+        print("///////////////////////////////////////////////////")
         for i in range(len(board)):
-            print(board[i])
             print(board[i])
 
     def get_board(self):

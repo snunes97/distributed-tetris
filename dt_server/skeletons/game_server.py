@@ -27,7 +27,7 @@ class GameServer:
         while True:
             if self.server.match_exists():
                 message = self.server.get_board()
-                self.conn_pubsub.send(str(self.pubsub_topic) + " " + message)
+                self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(message))
                 time.sleep(1)
             else:
                 time.sleep(1)
@@ -66,6 +66,10 @@ class GameServer:
         if command == game.OP_GETBOARD:
             print("OP: GETBOARD")
             self.send_board()
+
+        if command == game.OP_MATCHEXISTS:
+            print("OP: MATCHEXISTS")
+            self.conn_repreq.send(bytes(self.server.check_game_start()))
 
     def send_board(self):
         board = self.server.get_board()
