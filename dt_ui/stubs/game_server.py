@@ -50,18 +50,22 @@ class GameServer:
 
     def move_right(self):
         self.conn_reqrep.send_string(stubs.OP_MOVERIGHT)
+        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def move_left(self):
         self.conn_reqrep.send_string(stubs.OP_MOVELEFT)
+        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def rotate_right(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_R)
+        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def rotate_left(self):
         self.conn_reqrep.send_string(stubs.OP_ROT_L)
+        self.clear_board_updates()
         return self.conn_reqrep.recv_string()
 
     def get_board(self):
@@ -71,3 +75,6 @@ class GameServer:
     def match_exists(self):
         self.conn_reqrep.send_string(stubs.OP_MATCHEXISTS)
         return self.conn_reqrep.recv_string()
+
+    def clear_board_updates(self):
+        self.board_updates = []

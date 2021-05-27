@@ -12,14 +12,14 @@ class Client():
     def __init__(self, server):
         self.BOARD_UPDATE_RATE = 1
         self.server = server
-        self.queue = Queue
         self.name = ""
+        self.lock = threading.Lock()
 
     def request_board_update(self):
         while True:
             if self.server.has_board_updates():
                 self.print_board(self.format_board(self.server.get_board_update()))
-                time.sleep(1)
+                time.sleep(0.5)
 
     def try_enter(self):
         new_name = input("Insert your player name: ")
@@ -35,18 +35,18 @@ class Client():
     def wait_for_match(self):
         while True:
             if self.server.match_exists():
+                print("Entering match...")
                 self.enter_game()
-                threading.Thread(target=self.request_board_update).start()
                 break
             else:
                 print("Waiting for match...")
                 time.sleep(1)
 
     def enter_game(self):
-        print("Entering game...")
         # gui = Gui(self.queue)
         # gui.start_gui()
-        self.print_board(self.format_board(self.server.get_board()))
+        # self.print_board(self.format_board(self.server.get_board()))
+        threading.Thread(target=self.request_board_update).start()
         input_listener = threading.Thread(target=self.start_input_listener)
         input_listener.start()
 
@@ -78,10 +78,10 @@ class Client():
         return formatted_board
 
     def print_board(self, board):
-        # print for testing
-        print("///////////////////////////////////////////////////")
-        for i in range(len(board)):
-            print(board[i])
+        with self.lock:
+            print("///////////////////////////////////////////////////")
+            for i in range(len(board)):
+                print(board[i])
 
     def get_board(self):
         self.print_board(self.format_board(self.server.get_board()))
