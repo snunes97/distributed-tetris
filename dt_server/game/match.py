@@ -31,7 +31,7 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                      [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
 
         #Defines the pieces
         #3 Pieces (T and L - right and left /)
@@ -115,6 +115,7 @@ class Match:
                 self.board.remove(line)
                 self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
                 self.player1.add_score(1)
+                self.server.send_scores(self.player1)
                 print(self.player1.get_name() + ": " + str(self.player1.get_score()))
 
     def start_timer(self):

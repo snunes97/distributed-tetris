@@ -22,17 +22,28 @@ class ClientStub:
 
         print("Connected!")
 
-        topic_filter = "boardupdate"
-        self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
+        self.topic_filter_board = "boardupdate"
+        self.topic_filter_score = "score"
+        self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_board)
+        self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_score)
 
-        threading.Thread(target=self.get_board_update_message).start()
+        threading.Thread(target=self.get_published_update).start()
 
-    def get_board_update_message(self):
+    def get_published_update(self):
         while True:
             message = self.conn_pubsub.recv_string()
-            topic, board = message.split()
-            self.latest_board = board
-            time.sleep(0.2)
+            topic, content = message.split("$")
+            if topic == self.topic_filter_board:
+                self.update_latest_board(content)
+            elif topic == self.topic_filter_score:
+                self.update_score(content)
+
+    def update_score(self, score):
+        print(score)
+
+    def update_latest_board(self, board):
+        self.latest_board = board
+        time.sleep(0.2)
 
     def get_board_update(self):
         if self.latest_board is not None:

@@ -10,7 +10,8 @@ class ServerSkeleton:
         self.port_pubsub = port_pubsub
         self.host = host
         self.server = server
-        self.pubsub_topic = "boardupdate"
+        self.pubsub_topic_board = "boardupdate"
+        self.pubsub_topic_score = "score"
 
         context = zmq.Context()
         print("Opening game server...")
@@ -35,7 +36,10 @@ class ServerSkeleton:
 
     def send_board_update(self, board):
         if self.server.match_exists():
-            self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(board))
+            self.conn_pubsub.send_string(str(self.pubsub_topic_board) + "$" + self.board_to_string(board))
+
+    def send_scores(self, player1):
+        self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + player1.name + ":" + str(player1.score))
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()

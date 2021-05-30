@@ -68,3 +68,7 @@ class Server:
     @staticmethod
     def set_skeleton(skeleton):
         Server.skeleton = skeleton
+
+    @staticmethod
+    def send_scores(player1):
+        Server.skeleton.send_scores(player1)
