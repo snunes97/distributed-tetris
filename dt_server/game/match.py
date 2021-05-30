@@ -7,13 +7,14 @@ class Match:
     def __init__(self, player1, server):
         self.player1 = player1
         self.server = server
+        self.game_over = False
 
         self.TICK_RATE = 1
 
         # Defines the board
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -107,7 +108,12 @@ class Match:
         new_piece = copy.deepcopy(random.choice(self.pieces))
         self.active_piece = new_piece
         self.active_piece.piece_offset()
+        for pos in self.active_piece.current_shape():
+            if self.board[pos[0]][pos[1]] == 2:
+                self.game_over = True
+                print("GAME OVER!")
         self.draw_shape(1, self.active_piece)
+
 
     def check_line(self):
         for line in self.board:
@@ -122,32 +128,40 @@ class Match:
         threading.Timer(self.TICK_RATE, self.tick, [1]).start()
 
     def tick(self, timed):
-        self.draw_shape(0, self.active_piece)
-        self.active_piece.move_down()
-        self.draw_shape(1, self.active_piece)
 
-        for pos in self.active_piece.current_shape():
-            if pos[0] >= 20:
+        for pos in self.board[0]:
+            if pos == 2:
+                print("GAME OVER!")
+                self.game_over = True
+                break
+
+        if not self.game_over:
+            self.draw_shape(0, self.active_piece)
+            self.active_piece.move_down()
+            self.draw_shape(1, self.active_piece)
+
+            for pos in self.active_piece.current_shape():
+                if pos[0] >= 20:
+                    self.draw_shape(2, self.active_piece)
+                    self.check_line()
+                    self.place_new_piece()
+                    break
+
+            #Confirma se não tem peça por baixo
+            if self.active_piece.check_below(self.board):
+                for pos in self.active_piece.current_shape():
+                    if pos[0] == 0:
+                        break #endgame?
+
                 self.draw_shape(2, self.active_piece)
                 self.check_line()
                 self.place_new_piece()
-                break
 
-        #Confirma se não tem peça por baixo
-        if self.active_piece.check_below(self.board):
-            for pos in self.active_piece.current_shape():
-                if pos[0] == 0:
-                    break #endgame?
+            if timed:
+                self.start_timer()
 
-            self.draw_shape(2, self.active_piece)
-            self.check_line()
-            self.place_new_piece()
-
-        if timed:
-            self.start_timer()
-
-        # print("/////////////////////////////////////////////////////////")
-        # self.print_board()
-        #TODO: publish board update
-        self.server.send_board_update(self.board)
+            # print("/////////////////////////////////////////////////////////")
+            # self.print_board()
+            #TODO: publish board update
+            self.server.send_board_update(self.board)
 

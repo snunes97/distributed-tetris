@@ -24,10 +24,13 @@ class ClientStub:
 
         self.topic_filter_board = "boardupdate"
         self.topic_filter_score = "score"
+        self.topic_filter_game = "game"
         self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_board)
         self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_score)
+        self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_game)
 
-        threading.Thread(target=self.get_published_update).start()
+        self.subscriber_thread = threading.Thread(target=self.get_published_update)
+        self.subscriber_thread.start()
 
     def get_published_update(self):
         while True:
@@ -37,6 +40,9 @@ class ClientStub:
                 self.update_latest_board(content)
             elif topic == self.topic_filter_score:
                 self.update_score(content)
+            elif topic == self.topic_filter_game:
+                if content == "GAMEOVER":
+                    
 
     def update_score(self, score):
         print(score)
