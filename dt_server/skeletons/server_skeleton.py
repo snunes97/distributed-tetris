@@ -40,8 +40,8 @@ class ServerSkeleton:
         if self.server.match_exists():
             self.conn_pubsub.send_string(str(self.pubsub_topic_board) + "$" + self.board_to_string(board))
 
-    def send_scores(self, player1):
-        self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + player1.name + ":" + str(player1.score))
+    def send_scores(self, scores):
+        self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
 
     def send_game_over(self):
         self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER")
@@ -52,38 +52,41 @@ class ServerSkeleton:
         self.conn_repreq.send_string(str(response))
 
     def dispatch_request(self, command):
-        if command == skeletons.OP_VALIDATEPLAYER:
+
+        op, player_name = command.split("$")
+
+        if op == skeletons.OP_VALIDATEPLAYER:
             print("OP: VALIDATEPLAYER")
             self.conn_repreq.send_string("ACK")
             self.validate_player()
 
-        if command == skeletons.OP_MOVERIGHT:
+        if op == skeletons.OP_MOVERIGHT:
             print("OP: MOVERIGHT")
-            self.server.move_right()
+            self.server.move_right(player_name)
             self.send_board()
 
-        if command == skeletons.OP_MOVELEFT:
+        if op == skeletons.OP_MOVELEFT:
             print("OP: MOVELEFT")
-            self.server.move_left()
+            self.server.move_left(player_name)
             self.send_board()
 
-        if command == skeletons.OP_ROT_R:
+        if op == skeletons.OP_ROT_R:
             print("OP: ROTRIGHT")
-            self.server.rotate_right()
+            self.server.rotate_right(player_name)
             self.send_board()
 
-        if command == skeletons.OP_ROT_L:
+        if op == skeletons.OP_ROT_L:
             print("OP: ROTLEFT")
-            self.server.rotate_left()
+            self.server.rotate_left(player_name)
             self.send_board()
 
-        if command == skeletons.OP_GETBOARD:
+        if op == skeletons.OP_GETBOARD:
             print("OP: GETBOARD")
             self.send_board()
 
-        if command == skeletons.OP_MATCHEXISTS:
-            print("OP: MATCHEXISTS")
-            self.conn_repreq.send(bytes(self.server.check_game_start()))
+        # if op == skeletons.OP_MATCHEXISTS:
+        #     print("OP: MATCHEXISTS")
+        #     self.conn_repreq.send(bytes(self.server.check_game_start()))
 
     def send_board(self):
         board = self.server.get_board()

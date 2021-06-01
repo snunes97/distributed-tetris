@@ -23,6 +23,7 @@ class ClientStub:
 
         print("Connected!")
 
+        # Topicos tratados pelas comunicações PUBSUB
         self.topic_filter_board = "boardupdate"
         self.topic_filter_score = "score"
         self.topic_filter_game = "game"
@@ -34,6 +35,7 @@ class ClientStub:
         self.subscriber_thread = threading.Thread(target=self.get_published_update)
         self.subscriber_thread.start()
 
+    # Recebe mensagens PUBSUB, vê o tópico e decide o que é feito com o conteúdo da mensagem
     def get_published_update(self):
         while True:
             message = self.conn_pubsub.recv_string()
@@ -45,8 +47,6 @@ class ClientStub:
             elif topic == self.topic_filter_game:
                 if content == "GAMEOVER":
                     self.client.set_game_over()
-                    # print("GAME OVER")
-                    # self.latest_board = None
 
     def update_score(self, score):
         print(score)
@@ -63,34 +63,30 @@ class ClientStub:
         return self.latest_board is not None
 
     def validate_player(self, name: str):
-        self.conn_reqrep.send_string(stubs.OP_VALIDATEPLAYER)
+        self.conn_reqrep.send_string(stubs.OP_VALIDATEPLAYER + "$" + name)
         print(self.conn_reqrep.recv_string())
         self.conn_reqrep.send_string(name)
         response = self.conn_reqrep.recv_string()
         return response
 
     def move_right(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_MOVERIGHT)
+        self.conn_reqrep.send_string(stubs.OP_MOVERIGHT + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
     def move_left(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_MOVELEFT)
+        self.conn_reqrep.send_string(stubs.OP_MOVELEFT + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
     def rotate_right(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_ROT_R)
+        self.conn_reqrep.send_string(stubs.OP_ROT_R + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
     def rotate_left(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_ROT_L)
+        self.conn_reqrep.send_string(stubs.OP_ROT_L + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
     def get_board(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_GETBOARD)
-        return self.conn_reqrep.recv_string()
-
-    def match_exists(self, player_name):
-        self.conn_reqrep.send_string(stubs.OP_MATCHEXISTS)
+        self.conn_reqrep.send_string(stubs.OP_GETBOARD + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
     def set_client(self, client):

@@ -5,53 +5,46 @@ from game.match import Match
 class Server:
     skeleton = None
     match = None
-    min_players = 1
-    player_list = []
 
     @staticmethod
-    def start_new_match(player1):
-        match1 = Match(player1, Server)
+    def create_new_match():
+        match1 = Match(Server)
         Server.match = match1
-        Server.match.place_new_piece()
-        Server.match.print_board()
-        Server.match.start_timer()
 
     @staticmethod
-    def validate_player(name: str):
-        for player in Server.player_list:
-            if name == player.name:
-                return False
+    def validate_player(player_name: str):
 
-        new_player = Player(name)
-        Server.player_list.append(new_player)
-        return True
-
-    @staticmethod
-    def check_game_start():
-        if len(Server.player_list) == Server.min_players:
-            Server.start_new_match(Server.player_list[0])
+        if Server.match is None:
+            Server.create_new_match()
+            new_player = Player(player_name)
+            Server.match.add_player(new_player)
             return True
-        return False
+        else:
+            if not Server.match.player_name_is_duplicated(player_name):
+                new_player = Player(player_name)
+                Server.match.add_player(new_player)
+                return True
+            return False
 
     @staticmethod
-    def move_right():
-        Server.match.try_move_right()
-        Server.match.tick(0)
+    def move_right(player_name):
+        Server.match.try_move_right(player_name)
+        # Server.match.tick(0)
 
     @staticmethod
-    def move_left():
-        Server.match.try_move_left()
-        Server.match.tick(0)
+    def move_left(player_name):
+        Server.match.try_move_left(player_name)
+        # Server.match.tick(0)
 
     @staticmethod
-    def rotate_right():
-        Server.match.try_rotate(1)
-        Server.match.tick(0)
+    def rotate_right(player_name):
+        Server.match.try_rotate(1, player_name)
+        # Server.match.tick(0)
 
     @staticmethod
-    def rotate_left():
-        Server.match.try_rotate(0)
-        Server.match.tick(0)
+    def rotate_left(player_name):
+        Server.match.try_rotate(0, player_name)
+        # Server.match.tick(0)
 
     @staticmethod
     def get_board():
@@ -70,8 +63,8 @@ class Server:
         Server.skeleton = skeleton
 
     @staticmethod
-    def send_scores(player1):
-        Server.skeleton.send_scores(player1)
+    def send_scores(scores):
+        Server.skeleton.send_scores(scores)
 
     @staticmethod
     def send_game_over():

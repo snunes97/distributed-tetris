@@ -3,9 +3,10 @@ import threading
 import copy
 from game.piece import Piece
 
+
 class Match:
-    def __init__(self, player1, server):
-        self.player1 = player1
+    def __init__(self, server):
+        self.player_list = []
         self.server = server
         self.game_over = False
 
@@ -17,7 +18,7 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,10 +35,10 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
 
-        #Defines the pieces
-        #3 Pieces (T and L - right and left /)
+        # Defines the pieces
+        # 3 Pieces (T and L - right and left /)
 
-        #L piece and positions
+        # L piece and positions
         self.PIECE_L_UP = [[0, 1], [1, 1], [2, 1], [2, 2]]
         self.PIECE_L_RIGHT = [[1, 0], [1, 1], [1, 2], [2, 0]]
         self.PIECE_L_DOWN = [[0, 0], [0, 1], [1, 1], [2, 1]]
@@ -62,105 +63,130 @@ class Match:
 
         self.pieces = [piece_l, piece_j, piece_t]
 
-        self.active_piece = None
         self.timer_on = False
 
     def print_board(self):
-        # print for testing
         for i in range(len(self.board)):
             print(self.board[i])
 
     def get_board(self):
         return self.board
 
-    #confirma se a casa está ocupada e anda lateralmente (verificar redundancia)
-    def try_move_left(self):
-        if not self.active_piece.check_left(self.board):
-            self.draw_shape(0, self.active_piece)
-            self.active_piece.move_left()
+    # Confirma se a casa está ocupada e anda lateralmente (verificar redundancia)
+    def try_move_left(self, player_name):
+
+        player_piece = self.find_player(player_name).get_active_piece()
+
+        if not player_piece.check_left(self.board):
+            self.draw_shape(0, player_piece)
+            player_piece.move_left()
+            self.draw_shape(1, player_piece)
         else:
             return False
 
-    def try_move_right(self):
-        if not self.active_piece.check_right(self.board):
-            self.draw_shape(0, self.active_piece)
-            self.active_piece.move_right()
+    def try_move_right(self, player_name):
+
+        player_piece = self.find_player(player_name).get_active_piece()
+
+        if not player_piece.check_right(self.board):
+            self.draw_shape(0, player_piece)
+            player_piece.move_right()
+            self.draw_shape(1, player_piece)
         else:
             return False
 
-    def try_rotate(self, right):
-        if self.active_piece.check_rotation_walls(self.board):
-            self.draw_shape(0, self.active_piece)
-            self.active_piece.rotate(self.board, right)
+    def try_rotate(self, right, player_name):
+
+        player_piece = self.find_player(player_name).get_active_piece()
+
+        if player_piece.check_rotation_walls(self.board):
+            self.draw_shape(0, player_piece)
+            player_piece.rotate(self.board, right)
+            self.draw_shape(1, player_piece)
         else:
             return False
 
     def draw_shape(self, mode, shape):
-        #0-Casa Vazia
-        #1-Peca Ativa
-        #2-Peca Colocada
+        # 0-Casa Vazia
+        # 1-Peca Ativa
+        # 2-Peca Colocada
         shape_pos = shape.current_shape()
         for position in shape_pos:
             self.board[position[0]][position[1]] = mode
 
     def place_new_piece(self):
-        #pick random piece from piece list
-        new_piece = copy.deepcopy(random.choice(self.pieces))
-        self.active_piece = new_piece
-        self.active_piece.piece_offset()
-        for pos in self.active_piece.current_shape():
-            if self.board[pos[0]][pos[1]] == 2:
-                print("GG1")
-                self.set_game_over()
-                break
-        if not self.game_over:
-            self.draw_shape(1, self.active_piece)
-        else:
-            self.draw_shape(2, self.active_piece)
 
-    def check_line(self):
+        for player in self.player_list:
+            player_piece = player.get_active_piece()
+            if player_piece is None:
+                new_piece = copy.deepcopy(random.choice(self.pieces))
+                player_piece = new_piece
+                player_piece.piece_offset()
+
+                # Confirma se a nova peça não se instancia em cima de uma peça trancada (o que é game over)
+                for pos in player_piece.current_shape():
+                    if self.board[pos[0]][pos[1]] == 2:
+                        print("GG1")
+                        # TODO: check quem é que ganhou/perdeu
+                        self.set_game_over()
+                        break
+                if not self.game_over:
+                    self.draw_shape(1, player_piece)
+                else:
+                    self.draw_shape(2, player_piece)
+
+            player.set_active_piece(player_piece)
+
+    def check_line(self, player):
         for line in self.board:
             if 0 not in line:
                 self.board.remove(line)
                 self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-                self.player1.add_score(1)
-                self.server.send_scores(self.player1)
-                print(self.player1.get_name() + ": " + str(self.player1.get_score()))
+                player.add_score(1)
+                self.format_and_send_scores()
 
     def start_timer(self):
         threading.Timer(self.TICK_RATE, self.tick, [1]).start()
 
     def tick(self, timed):
-
+        print("TICKING")
         for pos in self.board[0]:
             if pos == 2:
                 print("GG2")
                 if not self.game_over:
+                    # TODO: ver quem é que ganha/perde
                     self.set_game_over()
                     break
 
         if not self.game_over:
 
-            self.draw_shape(0, self.active_piece)
-            self.active_piece.move_down()
-            self.draw_shape(1, self.active_piece)
+            for player in self.player_list:
 
-            for pos in self.active_piece.current_shape():
-                if pos[0] >= 20:
-                    self.draw_shape(2, self.active_piece)
-                    self.check_line()
-                    self.place_new_piece()
-                    break
+                player_piece = player.get_active_piece()
 
-            # #Confirma se não tem peça por baixo
-            if self.active_piece.check_below(self.board):
-                for pos in self.active_piece.current_shape():
-                    if pos[0] == 0:
+                self.draw_shape(0, player_piece)
+                player_piece.move_down()
+                self.draw_shape(1, player_piece)
+
+                done_checking = False
+
+                # Confirma se a peça chegou ao fundo e marca-a como trancada
+                for pos in player_piece.current_shape():
+                    print("CHECKING LEVEL 20")
+                    print(str(player_piece.current_shape()))
+                    if pos[0] >= 20:
+                        print("IS LEVEL 20!!!!")
+                        done_checking = True
+                        self.lock_piece(player, player_piece)
                         break
 
-                self.draw_shape(2, self.active_piece)
-                self.check_line()
-                self.place_new_piece()
+                if not done_checking:
+                    # Confirma se tem peça trancada por baixo
+                    if player_piece.check_below(self.board):
+                        # for pos in player_piece.current_shape():
+                        #     if pos[0] == 20:
+                        #         break
+                        self.lock_piece(player, player_piece)
 
             if timed:
                 self.start_timer()
@@ -170,8 +196,41 @@ class Match:
             if not self.game_over:
                 self.server.send_board_update(self.board)
 
+    def lock_piece(self, player, player_piece):
+        self.draw_shape(2, player_piece)
+        self.check_line(player)
+        player.set_active_piece(None)
+        self.place_new_piece()
+
     def set_game_over(self):
         print("GAME OVER")
         self.game_over = True
         self.server.send_game_over()
-        self.server.send_scores(self.player1)
+        self.format_and_send_scores()
+
+    def add_player(self, new_player):
+        print(new_player.name + " JOINED THE MATCH")
+        self.player_list.append(new_player)
+        if len(self.player_list) - 1 == 0:
+            print("STARTING MATCH")
+            self.place_new_piece()
+            self.print_board()
+            print("////////////////////////////////////////////////FIRSTPRINT")
+            self.start_timer()
+
+    def player_name_is_duplicated(self, player_name):
+        for player in self.player_list:
+            if player_name == player.name:
+                return False
+        return True
+
+    def find_player(self, player_name):
+        for player in self.player_list:
+            if player.name == player_name:
+                return player
+
+    def format_and_send_scores(self):
+        scores_string = ""
+        for player in self.player_list:
+            scores_string += player.name + ":" + str(player.get_score()) + " | "
+        self.server.send_scores(scores_string)

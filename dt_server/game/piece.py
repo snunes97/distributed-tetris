@@ -17,8 +17,11 @@ class Piece:
 
     def check_below(self, board):
         current_shape = self.current_shape()
+        print("LE SHAPE: " + str(current_shape))
         for i in range(len(current_shape)):
+            print("checking")
             if board[current_shape[i][0]+1][current_shape[i][1]] == 2:
+                print("lock")
                 return True
 
     def check_left(self, board):
@@ -122,3 +125,4 @@ class Piece:
             for i in range(len(shape)):
                 shape[i][1] += offset
         self.shapes = [deepcopy(self.shape_up), deepcopy(self.shape_right), deepcopy(self.shape_down), deepcopy(self.shape_left)]
+        print(str(self.shapes))
