@@ -5,6 +5,7 @@ import threading
 
 class ClientStub:
     def __init__(self, host: str, port_reqrep: int, port_pubsub: int) -> None:
+        self.client = None
         self.host = host
         self.port_reqrep = port_reqrep
         self.port_pubsub = port_pubsub
@@ -25,6 +26,7 @@ class ClientStub:
         self.topic_filter_board = "boardupdate"
         self.topic_filter_score = "score"
         self.topic_filter_game = "game"
+
         self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_board)
         self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_score)
         self.conn_pubsub.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter_game)
@@ -42,7 +44,9 @@ class ClientStub:
                 self.update_score(content)
             elif topic == self.topic_filter_game:
                 if content == "GAMEOVER":
-                    
+                    self.client.set_game_over()
+                    # print("GAME OVER")
+                    # self.latest_board = None
 
     def update_score(self, score):
         print(score)
@@ -65,29 +69,29 @@ class ClientStub:
         response = self.conn_reqrep.recv_string()
         return response
 
-    def move_right(self):
+    def move_right(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_MOVERIGHT)
         return self.conn_reqrep.recv_string()
 
-    def move_left(self):
+    def move_left(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_MOVELEFT)
         return self.conn_reqrep.recv_string()
 
-    def rotate_right(self):
+    def rotate_right(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_ROT_R)
         return self.conn_reqrep.recv_string()
 
-    def rotate_left(self):
+    def rotate_left(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_ROT_L)
         return self.conn_reqrep.recv_string()
 
-    def get_board(self):
+    def get_board(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_GETBOARD)
         return self.conn_reqrep.recv_string()
 
-    def match_exists(self):
+    def match_exists(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_MATCHEXISTS)
         return self.conn_reqrep.recv_string()
 
-    # def clear_board_updates(self):
-    #     self.board_updates = []
+    def set_client(self, client):
+        self.client = client

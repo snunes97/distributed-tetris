@@ -12,9 +12,11 @@ class ServerSkeleton:
         self.server = server
         self.pubsub_topic_board = "boardupdate"
         self.pubsub_topic_score = "score"
+        self.pubsub_topic_game = "game"
 
         context = zmq.Context()
         print("Opening game server...")
+
         self.conn_repreq = context.socket(zmq.REP)
         self.conn_repreq.bind("tcp://" + self.host + ":" + str(self.port_reqrep))
         print("REQREP connection successful!")
@@ -40,6 +42,9 @@ class ServerSkeleton:
 
     def send_scores(self, player1):
         self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + player1.name + ":" + str(player1.score))
+
+    def send_game_over(self):
+        self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER")
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()

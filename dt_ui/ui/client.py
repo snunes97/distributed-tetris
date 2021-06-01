@@ -8,14 +8,16 @@ from pynput.keyboard import Listener
 
 class Client:
     def __init__(self, server):
+
         self.BOARD_UPDATE_RATE = 1
         self.server = server
         self.name = ""
         self.lock = threading.Lock()
+        self.in_game = False
 
     def request_board_update(self):
         while True:
-            if self.server.has_board_updates():
+            if self.in_game and self.server.has_board_updates():
                 self.print_board(self.format_board(self.server.get_board_update()))
                 time.sleep(1)
 
@@ -34,6 +36,7 @@ class Client:
         while True:
             if self.server.match_exists():
                 print("Entering match...")
+                self.in_game = True
                 self.enter_game()
                 break
             else:
@@ -53,15 +56,16 @@ class Client:
             self.send_command()
 
     def on_press(self, key):
-        print("Key pressed: {0}".format(key))
-        if key.char == "a":
-            self.print_board(self.format_board(self.server.move_left()))
-        elif key.char == "d":
-            self.print_board(self.format_board(self.server.move_right()))
-        elif key.char == "e":
-            self.print_board(self.format_board(self.server.rotate_right()))
-        elif key.char == "q":
-            self.print_board(self.format_board(self.server.rotate_left()))
+        if self.in_game:
+            # print("Key pressed: {0}".format(key))
+            if key.char == "a":
+                self.print_board(self.format_board(self.server.move_left(self.name)))
+            elif key.char == "d":
+                self.print_board(self.format_board(self.server.move_right(self.name)))
+            elif key.char == "e":
+                self.print_board(self.format_board(self.server.rotate_right(self.name)))
+            elif key.char == "q":
+                self.print_board(self.format_board(self.server.rotate_left(self.name)))
 
     def send_command(self):
         with Listener(on_press=self.on_press) as listener:  # Create an instance of Listener
@@ -82,4 +86,9 @@ class Client:
                 print(board[i])
 
     def get_board(self):
-        self.print_board(self.format_board(self.server.get_board()))
+        self.print_board(self.format_board(self.server.get_board(self.name)))
+
+    def set_game_over(self):
+        self.get_board()
+        print("GAME OVER")
+        self.in_game = False
