@@ -20,7 +20,7 @@ class Server:
             Server.match.add_player(new_player)
             return True
         else:
-            if not Server.match.player_name_is_duplicated(player_name):
+            if Server.match.player_name_is_unique(player_name):
                 new_player = Player(player_name)
                 Server.match.add_player(new_player)
                 return True

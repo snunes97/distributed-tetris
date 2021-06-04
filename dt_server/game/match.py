@@ -164,29 +164,31 @@ class Match:
 
                 player_piece = player.get_active_piece()
 
-                self.draw_shape(0, player_piece)
-                player_piece.move_down()
-                self.draw_shape(1, player_piece)
+                if player_piece is not None:
 
-                done_checking = False
+                    self.draw_shape(0, player_piece)
+                    player_piece.move_down()
+                    self.draw_shape(1, player_piece)
 
-                # Confirma se a peça chegou ao fundo e marca-a como trancada
-                for pos in player_piece.current_shape():
-                    print("CHECKING LEVEL 20")
-                    print(str(player_piece.current_shape()))
-                    if pos[0] >= 20:
-                        print("IS LEVEL 20!!!!")
-                        done_checking = True
-                        self.lock_piece(player, player_piece)
-                        break
+                    done_checking = False
 
-                if not done_checking:
-                    # Confirma se tem peça trancada por baixo
-                    if player_piece.check_below(self.board):
-                        # for pos in player_piece.current_shape():
-                        #     if pos[0] == 20:
-                        #         break
-                        self.lock_piece(player, player_piece)
+                    # Confirma se a peça chegou ao fundo e marca-a como trancada
+                    for pos in player_piece.current_shape():
+                        print("CHECKING LEVEL 20")
+                        print(str(player_piece.current_shape()))
+                        if pos[0] >= 20:
+                            print("IS LEVEL 20!!!!")
+                            done_checking = True
+                            self.lock_piece(player, player_piece)
+                            break
+
+                    if not done_checking:
+                        # Confirma se tem peça trancada por baixo
+                        if player_piece.check_below(self.board):
+                            # for pos in player_piece.current_shape():
+                            #     if pos[0] == 20:
+                            #         break
+                            self.lock_piece(player, player_piece)
 
             if timed:
                 self.start_timer()
@@ -211,14 +213,14 @@ class Match:
     def add_player(self, new_player):
         print(new_player.name + " JOINED THE MATCH")
         self.player_list.append(new_player)
+        self.place_new_piece()
         if len(self.player_list) - 1 == 0:
             print("STARTING MATCH")
-            self.place_new_piece()
             self.print_board()
             print("////////////////////////////////////////////////FIRSTPRINT")
             self.start_timer()
 
-    def player_name_is_duplicated(self, player_name):
+    def player_name_is_unique(self, player_name):
         for player in self.player_list:
             if player_name == player.name:
                 return False
