@@ -66,6 +66,9 @@ class Client:
                 self.print_board(self.format_board(self.server.rotate_right(self.name)))
             elif key.char == "q":
                 self.print_board(self.format_board(self.server.rotate_left(self.name)))
+            elif key.char == "x":
+                self.server.disconnect(self.name)
+
 
     # Recebe a board em formato de string e formata para um estilo mais visivel
     def format_board(self, board_string):

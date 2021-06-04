@@ -47,6 +47,10 @@ class Server:
         # Server.match.tick(0)
 
     @staticmethod
+    def disconnect(player_name):
+        Server.match.remove_player(player_name)
+
+    @staticmethod
     def get_board():
         return Server.match.get_board()
 

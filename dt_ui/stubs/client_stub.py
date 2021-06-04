@@ -85,6 +85,9 @@ class ClientStub:
         self.conn_reqrep.send_string(stubs.OP_ROT_L + "$" + player_name)
         return self.conn_reqrep.recv_string()
 
+    def disconnect(self, player_name):
+        self.conn_reqrep.send_string(stubs.OP_DISCONNECT + "$" + player_name)
+
     def get_board(self, player_name):
         self.conn_reqrep.send_string(stubs.OP_GETBOARD + "$" + player_name)
         return self.conn_reqrep.recv_string()

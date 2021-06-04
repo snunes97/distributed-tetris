@@ -80,13 +80,13 @@ class ServerSkeleton:
             self.server.rotate_left(player_name)
             self.send_board()
 
+        if op == skeletons.OP_DISCONNECT:
+            print("OP: DISCONNECT")
+            self.server.disconnect(player_name)
+
         if op == skeletons.OP_GETBOARD:
             print("OP: GETBOARD")
             self.send_board()
-
-        # if op == skeletons.OP_MATCHEXISTS:
-        #     print("OP: MATCHEXISTS")
-        #     self.conn_repreq.send(bytes(self.server.check_game_start()))
 
     def send_board(self):
         board = self.server.get_board()
