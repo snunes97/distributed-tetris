@@ -231,8 +231,11 @@ class Match:
     def remove_player(self, player_name):
         for player in self.player_list:
             if player.name == player_name:
+                player_piece = self.find_player(player_name).get_active_piece()
+                self.draw_shape(0, player_piece)
                 print(player_name + " LEFT THE MATCH")
                 self.player_list.remove(player)
+
 
     def format_and_send_scores(self):
         scores_string = ""

@@ -12,6 +12,7 @@ class Client:
         self.name = ""
         self.lock = threading.Lock()
         self.in_game = False
+        self.input_listener = threading.Thread(target=self.send_command)
 
     # Periodicamente obtem e imprime a board mais recente
     def request_board_update(self):
@@ -44,8 +45,7 @@ class Client:
         print("Entering match...")
         self.in_game = True
         threading.Thread(target=self.request_board_update).start()
-        input_listener = threading.Thread(target=self.send_command)
-        input_listener.start()
+        self.input_listener.start()
 
     # Inicia o listener do teclado
     def send_command(self):
@@ -68,6 +68,8 @@ class Client:
                 self.print_board(self.format_board(self.server.rotate_left(self.name)))
             elif key.char == "x":
                 self.server.disconnect(self.name)
+                self.in_game = False
+
 
 
     # Recebe a board em formato de string e formata para um estilo mais visivel
