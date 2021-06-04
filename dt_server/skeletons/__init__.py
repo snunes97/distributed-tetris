@@ -2,7 +2,7 @@ from skeletons.server_skeleton import ServerSkeleton
 
 PORT_REQREP = 5001
 PORT_PUBSUB = 5002
-HOST = "127.0.0.1"
+HOST = "25.67.247.53"
 
 OP_VALIDATEPLAYER = "VALIDATEPLAYER"
 OP_MOVERIGHT = "MOVERIGHT"

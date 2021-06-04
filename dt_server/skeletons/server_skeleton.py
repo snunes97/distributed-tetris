@@ -83,6 +83,7 @@ class ServerSkeleton:
         if op == skeletons.OP_DISCONNECT:
             print("OP: DISCONNECT")
             self.server.disconnect(player_name)
+            self.conn_repreq.send_string("BYE")
 
         if op == skeletons.OP_GETBOARD:
             print("OP: GETBOARD")

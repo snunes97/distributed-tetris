@@ -1,6 +1,6 @@
 from stubs.client_stub import ClientStub
 #25.67.247.53 - Testes com hamachi (WORKS!)
-HOST = "127.0.0.1"
+HOST = "25.67.247.53"
 PORT_REQREP = 5001
 PORT_PUBSUB = 5002
 

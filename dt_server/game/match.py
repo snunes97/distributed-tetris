@@ -149,7 +149,6 @@ class Match:
         threading.Timer(self.TICK_RATE, self.tick, [1]).start()
 
     def tick(self, timed):
-        print("TICKING")
         for pos in self.board[0]:
             if pos == 2:
                 print("GG2")
@@ -174,10 +173,8 @@ class Match:
 
                     # Confirma se a peça chegou ao fundo e marca-a como trancada
                     for pos in player_piece.current_shape():
-                        print("CHECKING LEVEL 20")
                         print(str(player_piece.current_shape()))
                         if pos[0] >= 20:
-                            print("IS LEVEL 20!!!!")
                             done_checking = True
                             self.lock_piece(player, player_piece)
                             break
