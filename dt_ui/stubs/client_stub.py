@@ -49,7 +49,8 @@ class ClientStub:
                     self.client.set_game_over()
 
     def update_score(self, score):
-        print(score)
+        if self.client is not None and self.client.in_game:
+            print(score)
 
     def update_latest_board(self, board):
         self.latest_board = board
