@@ -20,7 +20,7 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -83,7 +83,9 @@ class Match:
             self.draw_shape(1, player_piece, self.board)
             self.prepare_to_send_board_to_player(self.board, player)
         else:
-            return False
+            # self.draw_shape(0, player_piece, self.board)
+            # self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
 
     def try_move_right(self, player_name):
 
@@ -96,7 +98,9 @@ class Match:
             self.draw_shape(1, player_piece, self.board)
             self.prepare_to_send_board_to_player(self.board, player)
         else:
-            return False
+            # self.draw_shape(0, player_piece, self.board)
+            # self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
 
     def try_rotate(self, right, player_name):
 
@@ -109,7 +113,9 @@ class Match:
             self.draw_shape(1, player_piece, self.board)
             self.prepare_to_send_board_to_player(self.board, player)
         else:
-            return False
+            # self.draw_shape(0, player_piece, self.board)
+            # self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
 
     def draw_shape(self, mode, shape, board):
         # 0-Casa Vazia
@@ -139,7 +145,6 @@ class Match:
                 for pos in player_piece.current_shape():
                     if self.board[pos[0]][pos[1]] == 2:
                         print("GG1")
-                        # TODO: check quem é que ganhou/perdeu
                         self.set_game_over()
                         break
                 if not self.game_over:
@@ -158,7 +163,8 @@ class Match:
                 self.format_and_send_scores()
 
     def start_timer(self):
-        threading.Timer(self.TICK_RATE, self.tick, [1]).start()
+        if not self.game_over:
+            threading.Timer(self.TICK_RATE, self.tick, [1]).start()
 
     def tick(self, timed):
         for pos in self.board[0]:
@@ -215,8 +221,7 @@ class Match:
     def set_game_over(self):
         print("GAME OVER")
         self.game_over = True
-        self.server.send_game_over()
-        self.format_and_send_scores()
+        self.server.send_game_over(self.check_winners())
 
     def add_player(self, new_player):
         print(new_player.name + " JOINED THE MATCH")
@@ -247,6 +252,11 @@ class Match:
                 print(player_name + " LEFT THE MATCH")
                 self.player_list.remove(player)
 
+        if len(self.player_list) <= 0:
+            print("GAME OVER: All players left.")
+            self.set_game_over()
+            self.server.end_match()
+
     def format_and_send_scores(self):
         scores_string = ""
         for player in self.player_list:
@@ -272,3 +282,10 @@ class Match:
         else:
             new_board = self.clear_pieces(board)
             return new_board
+
+    def check_winners(self):
+        winner = self.player_list[0]
+        for player in self.player_list:
+            if player.score > winner.score:
+                winner = player
+        return winner

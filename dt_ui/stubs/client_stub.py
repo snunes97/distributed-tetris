@@ -46,7 +46,9 @@ class ClientStub:
                 elif topic == self.topic_filter_score:
                     self.update_score(content)
                 elif topic == self.topic_filter_game:
-                    if content == "GAMEOVER":
+                    state, winner = content.split(",")
+                    if state == "GAMEOVER":
+                        print("Winner: " + winner)
                         self.client.set_game_over()
 
     def update_score(self, score):

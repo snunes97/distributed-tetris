@@ -48,8 +48,11 @@ class ServerSkeleton:
     def send_scores(self, scores):
         self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
 
-    def send_game_over(self):
-        self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER")
+    def send_game_over(self, winner):
+        self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER," + winner.name + ": " + str(winner.score))
+
+    # def publish_winner(self):
+    #     self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()

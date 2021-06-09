@@ -27,6 +27,14 @@ class Server:
             return False
 
     @staticmethod
+    def end_match():
+        Server.match = None
+
+    # @staticmethod
+    # def publish_winner(player_name, player_score):
+    #     Server.skeleton.
+
+    @staticmethod
     def move_right(player_name):
         Server.match.try_move_right(player_name)
         # Server.match.tick(0)
@@ -75,5 +83,5 @@ class Server:
         Server.skeleton.send_scores(scores)
 
     @staticmethod
-    def send_game_over():
-        Server.skeleton.send_game_over()
+    def send_game_over(winner):
+        Server.skeleton.send_game_over(winner)
