@@ -87,23 +87,27 @@ class Match:
 
     def try_move_right(self, player_name):
 
-        player_piece = self.find_player(player_name).get_active_piece()
+        player = self.find_player(player_name)
+        player_piece = player.get_active_piece()
 
         if not player_piece.check_right(self.board):
             self.draw_shape(0, player_piece, self.board)
             player_piece.move_right()
             self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
         else:
             return False
 
     def try_rotate(self, right, player_name):
 
-        player_piece = self.find_player(player_name).get_active_piece()
+        player = self.find_player(player_name)
+        player_piece = player.get_active_piece()
 
         if player_piece.check_rotation_walls(self.board):
             self.draw_shape(0, player_piece, self.board)
             player_piece.rotate(self.board, right)
             self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
         else:
             return False
 
@@ -253,12 +257,12 @@ class Match:
         for player in players:
             temp_board = copy.deepcopy(board)
             player_board = self.draw_specific_player(temp_board, player.active_piece)
-            self.server.send_board_update(player_board, player.name)
+            self.server.publish_board_update(player_board, player.name)
 
     def prepare_to_send_board_to_player(self, board, player):
         temp_board = copy.deepcopy(board)
         player_board = self.draw_specific_player(temp_board, player.active_piece)
-        self.server.send_board_update(player_board, player.name)
+        self.server.reply_board_update(player_board)
 
     def draw_specific_player(self, board, player_piece):
         if player_piece is not None:

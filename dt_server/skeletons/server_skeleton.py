@@ -36,9 +36,14 @@ class ServerSkeleton:
     #         else:
     #             time.sleep(1)
 
-    def send_board_update(self, board, player_name):
+    def publish_board_update(self, board, player_name):
         if self.server.match_exists():
             self.conn_pubsub.send_string(str(self.pubsub_topic_board) + player_name + "$" + self.board_to_string(board))
+
+    def reply_board_update(self, board):
+        if self.server.match_exists():
+            board_string = self.board_to_string(board)
+            self.conn_repreq.send_string(board_string)
 
     def send_scores(self, scores):
         self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
