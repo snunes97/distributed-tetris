@@ -63,22 +63,22 @@ class ServerSkeleton:
         if op == skeletons.OP_MOVERIGHT:
             print("OP: MOVERIGHT")
             self.server.move_right(player_name)
-            self.send_board()
+            # self.send_board()
 
         if op == skeletons.OP_MOVELEFT:
             print("OP: MOVELEFT")
             self.server.move_left(player_name)
-            self.send_board()
+            # self.send_board()
 
         if op == skeletons.OP_ROT_R:
             print("OP: ROTRIGHT")
             self.server.rotate_right(player_name)
-            self.send_board()
+            # self.send_board()
 
         if op == skeletons.OP_ROT_L:
             print("OP: ROTLEFT")
             self.server.rotate_left(player_name)
-            self.send_board()
+            # self.send_board()
 
         if op == skeletons.OP_DISCONNECT:
             print("OP: DISCONNECT")

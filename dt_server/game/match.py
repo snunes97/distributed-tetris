@@ -74,13 +74,14 @@ class Match:
 
     # Confirma se a casa está ocupada e anda lateralmente (verificar redundancia)
     def try_move_left(self, player_name):
-
-        player_piece = self.find_player(player_name).get_active_piece()
+        player = self.find_player(player_name)
+        player_piece = player.get_active_piece()
 
         if not player_piece.check_left(self.board):
             self.draw_shape(0, player_piece, self.board)
             player_piece.move_left()
             self.draw_shape(1, player_piece, self.board)
+            self.prepare_to_send_board_to_player(self.board, player)
         else:
             return False
 
@@ -180,7 +181,6 @@ class Match:
 
                     # Confirma se a peça chegou ao fundo e marca-a como trancada
                     for pos in player_piece.current_shape():
-                        print(str(player_piece.current_shape()))
                         if pos[0] >= 20:
                             done_checking = True
                             self.lock_piece(player, player_piece)
@@ -250,11 +250,15 @@ class Match:
         self.server.send_scores(scores_string)
 
     def prepare_to_send_board(self, board, players):
-
         for player in players:
             temp_board = copy.deepcopy(board)
             player_board = self.draw_specific_player(temp_board, player.active_piece)
             self.server.send_board_update(player_board, player.name)
+
+    def prepare_to_send_board_to_player(self, board, player):
+        temp_board = copy.deepcopy(board)
+        player_board = self.draw_specific_player(temp_board, player.active_piece)
+        self.server.send_board_update(player_board, player.name)
 
     def draw_specific_player(self, board, player_piece):
         if player_piece is not None:
