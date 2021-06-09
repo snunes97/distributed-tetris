@@ -59,8 +59,8 @@ class Server:
         return Server.match is not None
 
     @staticmethod
-    def send_board_update(board):
-        Server.skeleton.send_board_update(board)
+    def send_board_update(board, player_name):
+        Server.skeleton.send_board_update(board, player_name)
 
     @staticmethod
     def set_skeleton(skeleton):

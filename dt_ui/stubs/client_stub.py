@@ -38,15 +38,16 @@ class ClientStub:
     # Recebe mensagens PUBSUB, vê o tópico e decide o que é feito com o conteúdo da mensagem
     def get_published_update(self):
         while True:
-            message = self.conn_pubsub.recv_string()
-            topic, content = message.split("$")
-            if topic == self.topic_filter_board:
-                self.update_latest_board(content)
-            elif topic == self.topic_filter_score:
-                self.update_score(content)
-            elif topic == self.topic_filter_game:
-                if content == "GAMEOVER":
-                    self.client.set_game_over()
+            if self.client is not None:
+                message = self.conn_pubsub.recv_string()
+                topic, content = message.split("$")
+                if topic == self.topic_filter_board + self.client.name:
+                    self.update_latest_board(content)
+                elif topic == self.topic_filter_score:
+                    self.update_score(content)
+                elif topic == self.topic_filter_game:
+                    if content == "GAMEOVER":
+                        self.client.set_game_over()
 
     def update_score(self, score):
         if self.client is not None and self.client.in_game:
