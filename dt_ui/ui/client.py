@@ -18,7 +18,6 @@ class Client:
     def request_board_update(self):
         while True:
             if self.in_game and self.server.has_board_updates():
-                print("INGAME: " + str(self.in_game))
                 self.print_board(self.format_board(self.server.get_board_update()))
                 time.sleep(self.BOARD_UPDATE_RATE)
 

@@ -232,7 +232,7 @@ class Match:
         if len(self.player_list) - 1 == 0:
             print("STARTING MATCH")
             self.print_board()
-            print("////////////////////////////////////////////////FIRSTPRINT")
+            # print("////////////////////////////////////////////////")
             self.start_timer()
 
     def player_name_is_unique(self, player_name):
