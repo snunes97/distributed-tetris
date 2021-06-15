@@ -30,29 +30,21 @@ class Server:
     def end_match():
         Server.match = None
 
-    # @staticmethod
-    # def publish_winner(player_name, player_score):
-    #     Server.skeleton.
-
     @staticmethod
     def move_right(player_name):
         Server.match.try_move_right(player_name)
-        # Server.match.tick(0)
 
     @staticmethod
     def move_left(player_name):
         Server.match.try_move_left(player_name)
-        # Server.match.tick(0)
 
     @staticmethod
     def rotate_right(player_name):
         Server.match.try_rotate(1, player_name)
-        # Server.match.tick(0)
 
     @staticmethod
     def rotate_left(player_name):
         Server.match.try_rotate(0, player_name)
-        # Server.match.tick(0)
 
     @staticmethod
     def disconnect(player_name):

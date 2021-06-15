@@ -1,6 +1,8 @@
 import random
 import threading
 import copy
+from sqlite3 import threadsafety
+
 from game.piece import Piece
 
 
@@ -20,7 +22,7 @@ class Match:
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -64,6 +66,8 @@ class Match:
         self.pieces = [piece_l, piece_j, piece_t]
 
         self.timer_on = False
+
+        self.lock = threading.Lock()
 
     def print_board(self):
         for i in range(len(self.board)):
@@ -155,12 +159,13 @@ class Match:
             player.set_active_piece(player_piece)
 
     def check_line(self, player):
-        for line in self.board:
-            if 0 not in line:
-                self.board.remove(line)
-                self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-                player.add_score(1)
-                self.format_and_send_scores()
+        with self.lock:
+            for line in self.board:
+                if 0 not in line:
+                    self.board.remove(line)
+                    self.board.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                    player.add_score(1)
+                    self.format_and_send_scores()
 
     def start_timer(self):
         if not self.game_over:
@@ -171,14 +176,11 @@ class Match:
             if pos == 2:
                 print("GG2")
                 if not self.game_over:
-                    # TODO: ver quem é que ganha/perde
                     self.set_game_over()
                     break
 
         if not self.game_over:
-
             for player in self.player_list:
-
                 player_piece = player.get_active_piece()
 
                 if player_piece is not None:
@@ -284,8 +286,10 @@ class Match:
             return new_board
 
     def check_winners(self):
-        winner = self.player_list[0]
-        for player in self.player_list:
-            if player.score > winner.score:
-                winner = player
-        return winner
+        if len(self.player_list) > 0:
+            winner = self.player_list[0]
+            for player in self.player_list:
+                if player.score > winner.score:
+                    winner = player
+            return winner
+        return None

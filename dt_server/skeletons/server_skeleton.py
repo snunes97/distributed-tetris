@@ -49,7 +49,10 @@ class ServerSkeleton:
         self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
 
     def send_game_over(self, winner):
-        self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER," + winner.name + ": " + str(winner.score))
+        if winner is not None:
+            self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER," + winner.name + ": " + str(winner.score))
+        else:
+            self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER,N/a: N/a")
 
     # def publish_winner(self):
     #     self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
