@@ -1,7 +1,6 @@
 import random
 import threading
 import copy
-from sqlite3 import threadsafety
 
 from game.piece import Piece
 

@@ -1,8 +1,6 @@
 import skeletons
 import zmq
 import game as game
-import time
-import threading
 
 class ServerSkeleton:
     def __init__(self, host: str, port_reqrep: int, port_pubsub: int, server: game.Server) -> None:
@@ -25,17 +23,6 @@ class ServerSkeleton:
         self.conn_pubsub.bind("tcp://" + self.host + ":" + str(self.port_pubsub))
         print("PUBSUB connection successful!")
 
-        # threading.Thread(target=self.publish_board_update).start()
-
-    # def publish_board_update(self):
-    #     while True:
-    #         if self.server.match_exists():
-    #             message = self.server.get_board()
-    #             self.conn_pubsub.send_string(str(self.pubsub_topic) + " " + self.board_to_string(message))
-    #             time.sleep(1)
-    #         else:
-    #             time.sleep(1)
-
     def publish_board_update(self, board, player_name):
         if self.server.match_exists():
             self.conn_pubsub.send_string(str(self.pubsub_topic_board) + player_name + "$" + self.board_to_string(board))
@@ -53,9 +40,6 @@ class ServerSkeleton:
             self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER," + winner.name + ": " + str(winner.score))
         else:
             self.conn_pubsub.send_string(str(self.pubsub_topic_game) + "$GAMEOVER,N/a: N/a")
-
-    # def publish_winner(self):
-    #     self.conn_pubsub.send_string(str(self.pubsub_topic_score) + "$" + scores)
 
     def validate_player(self):
         player_name = self.conn_repreq.recv_string()

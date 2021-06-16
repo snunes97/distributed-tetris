@@ -116,6 +116,7 @@ class Piece:
     def current_shape(self):
         return self.shapes[self.shape_index]
 
+    #Aplicar um offset aleatório para colocar a peça no início do jogo
     def piece_offset(self):
         offset = random.randrange(8)
         for shape in self.starting_shapes:
